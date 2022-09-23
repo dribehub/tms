@@ -14,7 +14,8 @@ target/
 HELP.md
 
 ### Maven ###
-!.mvn/wrapper/maven-wrapper.jar
+# !.mvn/wrapper/maven-wrapper.jar
+.mvn
 mvnw*
 
 ### IntelliJ IDEA ###
