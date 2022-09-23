@@ -15,7 +15,7 @@ HELP.md
 
 ### Maven ###
 !.mvn/wrapper/maven-wrapper.jar
-/mvnw*
+mvnw*
 
 ### IntelliJ IDEA ###
 .idea
