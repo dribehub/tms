@@ -20,6 +20,7 @@ public class User {
 
     private String password;
 
+    @Transient
     private Timestamp createdAt;
 
     @ManyToMany @JoinTable(

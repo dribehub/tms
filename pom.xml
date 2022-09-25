@@ -50,6 +50,10 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency> <!-- lombok -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency> <!-- validation-api -->
 	</dependencies>
 
 	<build>
