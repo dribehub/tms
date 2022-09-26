@@ -37,14 +37,15 @@ public class AuthController {
     public UserDto register(@RequestBody UserDto user) {
         userService.validateNewUser(user);
         user.setPassword(encoder.encode(user.getPassword()));
-        user.setUserRoles(Collections.singleton(Role.USER.value));
+        user.setRoles(Collections.singleton(Role.USER.role));
         return userService.register(user);
     }
 
     @PostMapping("login")
-    public ResponseEntity<JwtResponse> login(@RequestParam String username,
-                                             @RequestParam String password) {
+    public ResponseEntity<JwtResponse> login(@RequestBody UserDto user) {
 
+        String username = user.getUsername().toLowerCase();
+        String password = user.getPassword();
         Authentication authentication = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password));
 

@@ -1,6 +1,5 @@
 package com.tms.service.impl;
 
-import com.tms.mapper.CountryMapper;
 import com.tms.repository.CountryRepository;
 import com.tms.service.CountryService;
 import lombok.RequiredArgsConstructor;
@@ -13,5 +12,4 @@ public class CountryServiceImpl implements CountryService {
     // or be kept for admin CRUD
 
     private final CountryRepository repository;
-    private final CountryMapper mapper;
 }

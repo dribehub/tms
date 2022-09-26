@@ -20,7 +20,7 @@ public class UserMapperImpl implements UserMapper {
         entity.setUsername(dto.getUsername());
         entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
-        entity.setUserRoles(dto.getUserRoles());
+        entity.setRoles(dto.getRoles());
         return entity;
     }
 
@@ -32,7 +32,7 @@ public class UserMapperImpl implements UserMapper {
         details.setUsername(entity.getUsername());
         details.setEmail(entity.getEmail());
         details.setPassword(entity.getPassword());
-        details.setAuthorities(entity.getUserRoles());
+        details.setAuthorities(entity.getRoles());
         return details;
     }
 
@@ -44,7 +44,7 @@ public class UserMapperImpl implements UserMapper {
         dto.setUsername(entity.getUsername());
         dto.setEmail(entity.getEmail());
         dto.setPassword(entity.getPassword());
-        dto.setUserRoles(entity.getUserRoles());
+        dto.setRoles(entity.getRoles());
         return dto;
     }
 
@@ -56,7 +56,7 @@ public class UserMapperImpl implements UserMapper {
         details.setUsername(dto.getUsername());
         details.setEmail(dto.getEmail());
         details.setPassword(dto.getPassword());
-        details.setAuthorities(dto.getUserRoles());
+        details.setAuthorities(dto.getRoles());
         return details;
     }
 }

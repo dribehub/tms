@@ -30,14 +30,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetailsImpl getDetailsByUsername(String username) {
-        String errMessage = String.format("Could not find user '%s'", username);
-        User user = repository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException(errMessage));
-        return mapper.toDetails(user);
-    }
-
-    @Override
     public UserDto register(UserDto user) {
         return mapper.toDto(repository.save(mapper.toEntity(user)));
     }

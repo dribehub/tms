@@ -1,5 +1,6 @@
 package com.tms.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tms.entity.UserRole;
 import lombok.*;
 import java.util.Set;
@@ -7,15 +8,24 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter @ToString
+@JsonIgnoreProperties(value = {"password"}, allowSetters = true)
 public class UserDto {
 
     private Integer id;
+
     private String username;
+
     private String email;
+
     private String password;
-    private Set<UserRole> userRoles;
+
+    private Set<UserRole> roles;
 
     public void setUsername(String username) {
         this.username = username.toLowerCase();
+    }
+
+    public void setEmail(String email) {
+        this.email = email.toLowerCase();
     }
 }

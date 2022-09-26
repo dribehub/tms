@@ -9,8 +9,6 @@ public interface UserService {
 
     List<UserDto> getAll();
 
-    UserDetailsImpl getDetailsByUsername(String username);
-
     UserDto register(UserDto user);
 
     void validateNewUser(UserDto user);

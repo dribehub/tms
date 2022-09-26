@@ -4,12 +4,14 @@ import com.tms.entity.UserRole;
 
 public enum Role {
 
-    USER(new UserRole(1, "USER")),
-    ADMIN(new UserRole(2, "ADMIN"));
+    USER(1),
+    ADMIN(2);
 
-    public final UserRole value;
+    public final UserRole role;
+    public final Integer id;
 
-    Role(UserRole value) {
-        this.value = value;
+    Role(Integer id) {
+        this.role = new UserRole(id, name());
+        this.id = id;
     }
 }
