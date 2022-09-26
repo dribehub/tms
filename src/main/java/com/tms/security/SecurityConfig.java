@@ -57,7 +57,11 @@ public class SecurityConfig {
                 .antMatchers("/api/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/users/**").hasRole(Role.ADMIN.name())
 //                .antMatchers(HttpMethod.GET, "/api/users/**").hasAuthority(Role.ADMIN.name())
-                .anyRequest().authenticated();
+                .anyRequest().authenticated().and()
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout")
+                        .invalidateHttpSession(true)
+                );
 
         return http.build();
     }
