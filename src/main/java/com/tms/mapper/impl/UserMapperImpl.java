@@ -2,20 +2,15 @@ package com.tms.mapper.impl;
 
 import com.tms.dto.UserDto;
 import com.tms.entity.User;
-import com.tms.mapper.RoleMapper;
 import com.tms.mapper.UserMapper;
-
 import com.tms.security.UserDetailsImpl;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
 public class UserMapperImpl implements UserMapper {
-
-    private final RoleMapper roleMapper;
 
     @Override
     public User toEntity(UserDto dto) {
@@ -25,13 +20,20 @@ public class UserMapperImpl implements UserMapper {
         entity.setUsername(dto.getUsername());
         entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
-        entity.setCreatedAt(dto.getCreatedAt());
-        if (dto.getUserRoles() != null) {
-            entity.setUserRoles(dto.getUserRoles()
-                    .stream().map(roleMapper::toEntity)
-                    .collect(Collectors.toSet()));
-        }
+        entity.setUserRoles(dto.getUserRoles());
         return entity;
+    }
+
+    @Override
+    public UserDetailsImpl toDetails(User entity) {
+        if (entity == null) return null;
+        UserDetailsImpl details = new UserDetailsImpl();
+        details.setId(entity.getId());
+        details.setUsername(entity.getUsername());
+        details.setEmail(entity.getEmail());
+        details.setPassword(entity.getPassword());
+        details.setAuthorities(entity.getUserRoles());
+        return details;
     }
 
     @Override
@@ -42,38 +44,19 @@ public class UserMapperImpl implements UserMapper {
         dto.setUsername(entity.getUsername());
         dto.setEmail(entity.getEmail());
         dto.setPassword(entity.getPassword());
-        dto.setCreatedAt(entity.getCreatedAt());
-        if (entity.getUserRoles() != null) {
-            dto.setUserRoles(entity.getUserRoles()
-                    .stream().map(roleMapper::toDto)
-                    .collect(Collectors.toSet()));
-        }
+        dto.setUserRoles(entity.getUserRoles());
         return dto;
     }
 
     @Override
-    public UserDetailsImpl toDetails(User user) {
-        if (user == null) return null;
+    public UserDetailsImpl toDetails(UserDto dto) {
+        if (dto == null) return null;
         UserDetailsImpl details = new UserDetailsImpl();
-        details.setId(user.getId());
-        details.setUsername(user.getUsername());
-        details.setEmail(user.getEmail());
-        details.setPassword(user.getPassword());
-        details.setCreatedAt(user.getCreatedAt());
-        details.setAuthorities(user.getUserRoles());
+        details.setId(dto.getId());
+        details.setUsername(dto.getUsername());
+        details.setEmail(dto.getEmail());
+        details.setPassword(dto.getPassword());
+        details.setAuthorities(dto.getUserRoles());
         return details;
-    }
-
-    @Override
-    public User toUser(UserDetailsImpl details) {
-        if (details == null) return null;
-        User user = new User();
-        user.setId(details.getId());
-        user.setUsername(details.getUsername());
-        user.setEmail(details.getEmail());
-        user.setPassword(details.getPassword());
-        user.setCreatedAt(details.getCreatedAt());
-        user.setUserRoles(details.getAuthorities());
-        return user;
     }
 }

@@ -39,7 +39,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto register(UserDto user) {
-        validateNewUser(user);
         return mapper.toDto(repository.save(mapper.toEntity(user)));
     }
 

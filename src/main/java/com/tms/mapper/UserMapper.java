@@ -7,7 +7,8 @@ import com.tms.security.UserDetailsImpl;
 public interface UserMapper {
 
     User toEntity(UserDto dto);
+    UserDetailsImpl toDetails(User entity);
+
     UserDto toDto(User entity);
-    UserDetailsImpl toDetails(User user);
-    User toUser(UserDetailsImpl details);
+    UserDetailsImpl toDetails(UserDto dto);
 }

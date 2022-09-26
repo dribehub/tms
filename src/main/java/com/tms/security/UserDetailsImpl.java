@@ -1,15 +1,15 @@
 package com.tms.security;
 
-import com.tms.entity.UserRole;
+import com.tms.entity.User;
 
-import java.sql.Timestamp;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import lombok.*;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
 public class UserDetailsImpl implements UserDetails {
@@ -18,10 +18,29 @@ public class UserDetailsImpl implements UserDetails {
     private String username;
     private String email;
     private String password;
-    private Timestamp createdAt;
 
     private boolean enabled = true;
-    private Set<UserRole> authorities = new HashSet<>();
+    private Set<? extends GrantedAuthority> authorities;
+
+    public UserDetailsImpl(Integer id, String username, String email,
+            String password, Set<? extends GrantedAuthority> authorities) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.authorities = authorities;
+    }
+
+    public static UserDetailsImpl build(User user) {
+        return new UserDetailsImpl(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getUserRoles().stream()
+                        .map(role -> new SimpleGrantedAuthority(role.getName()))
+                        .collect(Collectors.toSet()));
+    }
 
     @Override
     public boolean isAccountNonExpired() {

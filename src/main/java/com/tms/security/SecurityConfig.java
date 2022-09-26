@@ -1,9 +1,9 @@
 package com.tms.security;
 
 import com.tms.service.UserService;
+import com.tms.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -23,8 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JwtTokenFilter jwtTokenFilter;
     private final UserService userService;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -50,28 +49,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 ex.getMessage()))
                 .and();
 
-/*
         // Set permissions on endpoints
         http.authorizeRequests()
-                // Our public endpoints
-                .antMatchers("/api/public/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/author/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/author/search").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/book/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/book/search").permitAll()
-                // Our private endpoints
-                .antMatchers("/api/admin/user/**").hasRole(Role.USER_ADMIN)
-                .antMatchers("/api/author/**").hasRole(Role.AUTHOR_ADMIN)
-                .antMatchers("/api/book/**").hasRole(Role.BOOK_ADMIN)
+                // public
+                .antMatchers("/auth/**").permitAll()
+//                .antMatchers(HttpMethod.GET, "/api/author/**").permitAll()
+//                .antMatchers(HttpMethod.POST, "/api/author/search").permitAll()
+//                .antMatchers(HttpMethod.GET, "/api/book/**").permitAll()
+//                .antMatchers(HttpMethod.POST, "/api/book/search").permitAll()
+                // private
+//                .antMatchers("/api/admin/user/**").hasRole(Role.USER_ADMIN)
+//                .antMatchers("/api/author/**").hasRole(Role.AUTHOR_ADMIN)
+//                .antMatchers("/api/book/**").hasRole(Role.BOOK_ADMIN)
                 .anyRequest().authenticated();
-*/
-
-        // Add JWT token filter
-        http.addFilterBefore(jwtTokenFilter,
-                UsernamePasswordAuthenticationFilter.class);
     }
 
-    // Used by spring security if CORS is enabled.
+    // Used by Spring Security if CORS is enabled.
     @Bean
     public CorsFilter corsFilter() {
 
@@ -81,14 +74,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
-        var source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
 
         return new CorsFilter(source);
     }
 
-    @Override
-    @Bean
+    @Bean @Override // explicitly exposes AuthenticationManager as a bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
