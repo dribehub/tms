@@ -5,10 +5,7 @@ This is a minimal web application for managing trips and flights all in one plac
 Implementation of Spring Security, dynamic user roles and password encryption.
 
 ### To be implemented
-* Sign Up
-* Log In / Log Out (session)
-* Spring Security
-* Password Encryption
+* Log Out
 * Log4j
 * Swagger
 * Frontend
