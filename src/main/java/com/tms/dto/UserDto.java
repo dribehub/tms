@@ -2,7 +2,7 @@ package com.tms.dto;
 
 import lombok.*;
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,5 +14,9 @@ public class UserDto {
     private String email;
     private String password;
     private Timestamp createdAt;
-    private List<UserRoleDto> userRoles;
+    private Set<UserRoleDto> userRoles;
+
+    public void setUsername(String username) {
+        this.username = username.toLowerCase();
+    }
 }

@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 public interface AuthService {
 
     Authentication getAuthentication();
-    UserDto getLoggedInUserDto();
-    Integer getLoggedInUserId();
-    boolean isLoggedInUserAdmin();
+    UserDto getPrinciple();
+    Integer getPrincipleId();
+    boolean isPrincipleAdmin();
 }

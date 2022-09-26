@@ -1,4 +1,4 @@
-package com.tms.exception.user;
+package com.tms.exception.validation;
 
 import com.tms.exception.CustomRuntimeException;
 

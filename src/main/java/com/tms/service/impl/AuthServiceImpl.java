@@ -1,6 +1,7 @@
 package com.tms.service.impl;
 
 import com.tms.dto.UserDto;
+import com.tms.entity.User;
 import com.tms.mapper.UserMapper;
 import com.tms.repository.UserRepository;
 import com.tms.service.AuthService;
@@ -23,17 +24,19 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserDto getLoggedInUserDto() {
-        return userMapper.toDto(userRepository.findByUsername(getAuthentication().getName()));
+    public UserDto getPrinciple() {
+        String username = getAuthentication().getName();
+        User loggedInUser = userRepository.findByUsername(username).orElse(null);
+        return userMapper.toDto(loggedInUser);
     }
 
     @Override
-    public Integer getLoggedInUserId() {
-        return getLoggedInUserDto().getId();
+    public Integer getPrincipleId() {
+        return getPrinciple().getId();
     }
 
     @Override
-    public boolean isLoggedInUserAdmin() {
+    public boolean isPrincipleAdmin() {
         return getAuthentication().getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .anyMatch(a -> a.equals("admin"));

@@ -5,8 +5,10 @@ import com.tms.entity.User;
 import com.tms.mapper.RoleMapper;
 import com.tms.mapper.UserMapper;
 
+import com.tms.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class UserMapperImpl implements UserMapper {
         if (dto.getUserRoles() != null) {
             entity.setUserRoles(dto.getUserRoles()
                     .stream().map(roleMapper::toEntity)
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
         return entity;
     }
@@ -44,8 +46,34 @@ public class UserMapperImpl implements UserMapper {
         if (entity.getUserRoles() != null) {
             dto.setUserRoles(entity.getUserRoles()
                     .stream().map(roleMapper::toDto)
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
         return dto;
+    }
+
+    @Override
+    public UserDetailsImpl toDetails(User user) {
+        if (user == null) return null;
+        UserDetailsImpl details = new UserDetailsImpl();
+        details.setId(user.getId());
+        details.setUsername(user.getUsername());
+        details.setEmail(user.getEmail());
+        details.setPassword(user.getPassword());
+        details.setCreatedAt(user.getCreatedAt());
+        details.setAuthorities(user.getUserRoles());
+        return details;
+    }
+
+    @Override
+    public User toUser(UserDetailsImpl details) {
+        if (details == null) return null;
+        User user = new User();
+        user.setId(details.getId());
+        user.setUsername(details.getUsername());
+        user.setEmail(details.getEmail());
+        user.setPassword(details.getPassword());
+        user.setCreatedAt(details.getCreatedAt());
+        user.setUserRoles(details.getAuthorities());
+        return user;
     }
 }
