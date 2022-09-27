@@ -14,9 +14,9 @@ public interface TripService {
 
     TripDto update(TripDto trip);
 
-    TripDto sendApproval(TripDto trip);
+    TripDto sendApprovalById(Integer id);
 
-    TripDto approve(TripDto trip);
+    TripDto approveById(Integer id);
 
     TripDto deleteById(Integer id);
 }

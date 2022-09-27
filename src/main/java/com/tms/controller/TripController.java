@@ -18,13 +18,13 @@ public class TripController {
 
     private final TripService service;
 
-    @GetMapping("getAll") // admin
+    @GetMapping("getAll")
     public List<TripDto> getAll() {
         return service.getAll();
     }
 
-    @GetMapping("getById") // admin
-    public TripDto getById(@RequestParam Integer id) {
+    @GetMapping("getById/{id}")
+    public TripDto getById(@PathVariable Integer id) {
         return service.getById(id);
     }
 
@@ -34,17 +34,31 @@ public class TripController {
         return service.create(trip);
     }
 
-    @PutMapping("update") // admin, user (status changes to WAITING_FOR_APPROVAL
+    @PutMapping("update") // admin, user
     @ResponseStatus(HttpStatus.ACCEPTED)
     public TripDto update(@RequestBody TripDto trip) {
-        if (trip == null) throw new NullRequestBodyException();
-        if (trip.getId() == null) throw new IdNotFoundException();
+        if (trip == null)
+            throw new NullRequestBodyException();
+        if (trip.getId() == null)
+            throw new IdNotFoundException();
         return service.update(trip);
     }
 
-    @DeleteMapping("deleteById") // admin
+    @PutMapping("sendApprovalById/{id}") // user
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public TripDto deleteById(@RequestParam Integer id) {
+    public TripDto sendApprovalById(@PathVariable Integer id) {
+        return service.sendApprovalById(id);
+    }
+
+    @PutMapping("approveById/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public TripDto approveById(@PathVariable Integer id) {
+        return service.approveById(id);
+    }
+
+    @DeleteMapping("deleteById/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public TripDto deleteById(@PathVariable Integer id) {
         return service.deleteById(id);
     }
 }

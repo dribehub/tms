@@ -17,9 +17,8 @@ public enum RoleEnum {
         this.id = id;
     }
 
-    public static String[] getAllNames() {
+    public static String[] names() {
         return Arrays.stream(RoleEnum.values())
-                .map(RoleEnum::name)
-                .toArray(String[]::new);
+                .map(RoleEnum::name).toArray(String[]::new);
     }
 }

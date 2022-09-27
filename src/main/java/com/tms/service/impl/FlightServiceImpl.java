@@ -19,6 +19,11 @@ public class FlightServiceImpl implements FlightService {
     private final FlightRepository repository;
     private final FlightMapper mapper;
 
+    private Flight safeFindById(Integer id) {
+        return repository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(Flight.class, id));
+    }
+
     @Override
     public List<FlightDto> getAll() {
         return mapper.toDtos(repository.findAll());
@@ -26,8 +31,7 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public FlightDto getById(Integer id) {
-        return mapper.toDto(repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(Flight.class, id)));
+        return mapper.toDto(safeFindById(id));
     }
 
     @Override
@@ -39,8 +43,7 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public FlightDto update(FlightDto flight) {
-        repository.findById(flight.getId()).orElseThrow(
-                () -> new EntityNotFoundException(Flight.class, flight.getId()));
+        safeFindById(flight.getId());
         if (!flight.getTrip().isApproved())
             throw new RequestRejectedException("This trip is not yet approved");
         return mapper.toDto(repository.save(mapper.toEntity(flight)));
@@ -48,8 +51,7 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public FlightDto deleteById(Integer id) {
-        Flight deleted = repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(Flight.class, id));
+        Flight deleted = safeFindById(id);
         repository.deleteById(id);
         return mapper.toDto(deleted);
     }

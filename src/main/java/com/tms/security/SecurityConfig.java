@@ -60,8 +60,10 @@ public class SecurityConfig {
                 .antMatchers("/api/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/users/**").hasRole(ADMIN.name())
                 .antMatchers(HttpMethod.GET, "/api/trips/**").hasRole(ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/api/trips/update").hasAnyRole(RoleEnum.names())
+                .antMatchers(HttpMethod.GET, "/api/trips/sendApprovalById").hasRole(USER.name())
                 .antMatchers(HttpMethod.GET, "/api/trips/create").hasRole(USER.name())
-                .antMatchers(HttpMethod.GET, "/api/trips/update").hasAnyRole(RoleEnum.getAllNames())
+                .antMatchers(HttpMethod.GET, "/api/flights/**").hasRole(USER.name())
                 .anyRequest().authenticated().and()
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")

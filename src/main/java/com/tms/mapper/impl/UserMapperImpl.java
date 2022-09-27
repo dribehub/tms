@@ -24,6 +24,8 @@ public class UserMapperImpl implements UserMapper {
                 dto.getPassword(),
                 dto.getRoles(),
                 dto.getCreatedAt(),
+                dto.getUpdatedAt(),
+                dto.isApproved(),
                 dto.isActive()
         );
     }
@@ -42,6 +44,8 @@ public class UserMapperImpl implements UserMapper {
                 entity.getPassword(),
                 entity.getRoles(),
                 entity.getCreatedAt(),
+                entity.getUpdatedAt(),
+                entity.isApproved(),
                 entity.isActive()
         );
     }

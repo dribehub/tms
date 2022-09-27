@@ -31,6 +31,11 @@ public class UserDto {
     private Timestamp createdAt;
 
     @JsonIgnore
+    private Timestamp updatedAt;
+
+    private boolean isApproved;
+
+    @JsonIgnore
     private boolean isActive;
 
     public void setUsername(String username) {
@@ -41,11 +46,19 @@ public class UserDto {
         this.email = email.toLowerCase();
     }
 
+    public void addRole(RoleEnum role) {
+        roles.add(role.role);
+    }
+
+    public void setRole(RoleEnum role) {
+        roles = Collections.singleton(role.role);
+    }
+
     public void setRoleAsUser() {
-        setRoles(Collections.singleton(RoleEnum.USER.role));
+        setRole(RoleEnum.USER);
     }
 
     public void setRoleAsAdmin() {
-        setRoles(Collections.singleton(RoleEnum.ADMIN.role));
+        setRole(RoleEnum.ADMIN);
     }
 }

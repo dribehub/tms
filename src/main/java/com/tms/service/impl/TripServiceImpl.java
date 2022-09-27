@@ -24,6 +24,11 @@ public class TripServiceImpl implements TripService {
     private final TripStatusRepository statusRepository;
     private final TripMapper mapper;
 
+    private Trip safeFindById(Integer id) {
+        return repository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(Trip.class, id));
+    }
+
     @Override
     public List<TripDto> getAll() {
         return mapper.toDtos(repository.findAll());
@@ -31,8 +36,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public TripDto getById(Integer id) {
-         return mapper.toDto(repository.findById(id).orElseThrow(
-                 () -> new EntityNotFoundException(Trip.class, id)));
+         return mapper.toDto(safeFindById(id));
     }
 
     @Override
@@ -51,26 +55,29 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public TripDto update(TripDto trip) {
+        safeFindById(trip.getId());
         trip.setStatus(getStatus(TripStatusEnum.WAITING_FOR_APPROVAL));
         return mapper.toDto(repository.save(mapper.toEntity(trip)));
     }
 
     @Override
-    public TripDto sendApproval(TripDto trip) {
-        trip.setStatus(getStatus(TripStatusEnum.WAITING_FOR_APPROVAL));
-        return mapper.toDto(repository.save(mapper.toEntity(trip)));
+    public TripDto sendApprovalById(Integer id) {
+        Trip sentApproval = safeFindById(id);
+        sentApproval.setStatus(getStatus(TripStatusEnum.WAITING_FOR_APPROVAL));
+        // TODO: notify admins
+        return mapper.toDto(repository.save(sentApproval));
     }
 
     @Override
-    public TripDto approve(TripDto trip) {
-        trip.setStatus(getStatus(TripStatusEnum.APPROVED));
-        return mapper.toDto(repository.save(mapper.toEntity(trip)));
+    public TripDto approveById(Integer id) {
+        Trip approved = safeFindById(id);
+        approved.setStatus(getStatus(TripStatusEnum.APPROVED));
+        return mapper.toDto(repository.save(approved));
     }
 
     @Override
     public TripDto deleteById(Integer id) {
-        Trip deleted = repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(Trip.class, id));
+        Trip deleted = safeFindById(id);
         repository.deleteById(id);
         return mapper.toDto(deleted);
     }

@@ -22,6 +22,11 @@ public class UserServiceImpl implements UserService {
     private final UserMapper mapper;
     private final PasswordEncoder encoder;
 
+    private User safeFindById(Integer id) {
+        return repository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(User.class, id));
+    }
+
     @Override
     public List<UserDto> getAll() {
         return mapper.toDtos(repository.findAll());
@@ -38,9 +43,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDto> getApproved() {
+        return mapper.toDtos(repository.findApproved());
+    }
+
+    @Override
+    public List<UserDto> getNotApproved() {
+        return mapper.toDtos(repository.findNotApproved());
+    }
+
+    @Override
     public UserDto getById(Integer id) {
-        return mapper.toDto(repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(User.class, id)));
+        return mapper.toDto(safeFindById(id));
     }
 
     @Override
@@ -77,26 +91,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto update(UserDto user) {
-        repository.findById(user.getId()).orElseThrow(
-                () -> new EntityNotFoundException(User.class, user.getId()));
+        safeFindById(user.getId());
         if (user.getPassword() != null)
             user.setPassword(encoder.encode(user.getPassword()));
         return mapper.toDto(repository.save(mapper.toEntity(user)));
     }
 
     @Override
-    public UserDto activateById(Integer id) {
-        User user = repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(User.class, id));
-        user.setActive(true);
+    public UserDto setApprovedById(Integer id, boolean isApproved) {
+        User user = safeFindById(id);
+        user.setApproved(isApproved);
         return mapper.toDto(repository.save(user));
     }
 
     @Override
     public UserDto deleteById(Integer id) {
-        User deleted = repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(User.class, id));
+        User deleted = safeFindById(id);
         deleted.setActive(false);
         return mapper.toDto(repository.save(deleted));
+    }
+
+    @Override
+    public UserDto restoreById(Integer id) {
+        User restored = safeFindById(id);
+        restored.setActive(true);
+        return mapper.toDto(repository.save(restored));
     }
 }

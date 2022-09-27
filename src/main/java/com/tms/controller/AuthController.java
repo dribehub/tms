@@ -34,7 +34,8 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto register(@RequestBody UserDto user) {
         user.setRoleAsUser();
-        user.setActive(false);
+        user.setActive(true);
+        user.setApproved(false);
         return userService.register(user);
     }
 

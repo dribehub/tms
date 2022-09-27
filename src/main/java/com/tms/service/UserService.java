@@ -12,13 +12,19 @@ public interface UserService {
 
     List<UserDto> getNotActive();
 
+    List<UserDto> getApproved();
+
+    List<UserDto> getNotApproved();
+
     UserDto getById(Integer id);
 
     UserDto register(UserDto user);
 
     UserDto update(UserDto user);
 
-    UserDto activateById(Integer id);
+    UserDto setApprovedById(Integer id, boolean isApproved);
 
     UserDto deleteById(Integer id);
+
+    UserDto restoreById(Integer id);
 }

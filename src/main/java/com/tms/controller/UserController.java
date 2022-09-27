@@ -20,21 +20,21 @@ public class UserController {
 
     @GetMapping("getAll")
     public List<UserDto> getAll() {
-        return service.getAll();
-    }
-
-    @GetMapping("getActive")
-    public List<UserDto> getActive() {
         return service.getActive();
     }
 
-    @GetMapping("getNotActive")
-    public List<UserDto> getNotActive() {
-        return service.getNotActive();
+    @GetMapping("getApproved")
+    public List<UserDto> getApproved() {
+        return service.getApproved();
     }
 
-    @GetMapping("getById")
-    public UserDto getById(@RequestParam Integer id) {
+    @GetMapping("getNotApproved")
+    public List<UserDto> getNotApproved() {
+        return service.getNotApproved();
+    }
+
+    @GetMapping("getById/{id}")
+    public UserDto getById(@PathVariable Integer id) {
         return service.getById(id);
     }
 
@@ -42,26 +42,35 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@RequestBody UserDto user) {
         user.setActive(true);
+        user.setApproved(true);
         return service.register(user);
     }
 
     @PutMapping("update")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public UserDto update(@RequestBody UserDto user) {
-        if (user == null) throw new NullRequestBodyException();
-        if (user.getId() == null) throw new IdNotFoundException();
+        if (user == null)
+            throw new NullRequestBodyException();
+        if (user.getId() == null)
+            throw new IdNotFoundException();
         return service.update(user);
     }
 
-    @PutMapping("activate")
+    @PutMapping("approve/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserDto activateById(@RequestParam Integer id) {
-        return service.activateById(id);
+    public UserDto approveById(@PathVariable Integer id) {
+        return service.setApprovedById(id, true);
     }
 
-    @DeleteMapping("deleteById")
+    @PutMapping("reject/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserDto deleteById(@RequestParam Integer id) {
+    public UserDto rejectById(@PathVariable Integer id) {
+        return service.setApprovedById(id, false);
+    }
+
+    @DeleteMapping("deleteById/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public UserDto deleteById(@PathVariable Integer id) {
         return service.deleteById(id);
     }
 }

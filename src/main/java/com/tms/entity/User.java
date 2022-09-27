@@ -30,5 +30,10 @@ public class User {
     @Transient
     private Timestamp createdAt;
 
+    @Transient
+    private Timestamp updatedAt;
+
+    private boolean isApproved;
+
     private boolean isActive;
 }
