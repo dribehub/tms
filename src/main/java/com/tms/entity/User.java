@@ -23,7 +23,7 @@ public class User {
     @Transient
     private Timestamp createdAt;
 
-    @Enumerated(EnumType.STRING) @ManyToMany @JoinTable(
+    @ManyToMany @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
