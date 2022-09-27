@@ -1,5 +1,6 @@
 package com.tms.entity;
 
+import com.tms.enums.TripStatusEnum;
 import lombok.*;
 import javax.persistence.*;
 
@@ -13,4 +14,8 @@ public class TripStatus {
     private Integer id;
 
     private String name;
+
+    public void setName(TripStatusEnum status) {
+        this.name = status.name();
+    }
 }

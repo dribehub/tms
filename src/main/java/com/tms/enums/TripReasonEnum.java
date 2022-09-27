@@ -1,5 +1,5 @@
 package com.tms.enums;
 
-public enum TripReason {
+public enum TripReasonEnum {
     MEETING, TRAINING, PROJECT, WORKSHOP, EVENT, OTHER;
 }

@@ -1,5 +1,6 @@
 package com.tms.entity;
 
+import com.tms.enums.TripReasonEnum;
 import lombok.*;
 import javax.persistence.*;
 
@@ -13,4 +14,8 @@ public class TripReason {
     private Integer id;
 
     private String name;
+
+    public void setName(TripReasonEnum reason) {
+        this.name = reason.name();
+    }
 }

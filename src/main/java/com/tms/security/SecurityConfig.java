@@ -1,6 +1,6 @@
 package com.tms.security;
 
-import com.tms.enums.Role;
+import com.tms.enums.RoleEnum;
 import com.tms.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .antMatchers("/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/api/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/users/**").hasRole(Role.ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/api/users/**").hasRole(RoleEnum.ADMIN.name())
 //                .antMatchers(HttpMethod.GET, "/api/users/**").hasAuthority(Role.ADMIN.name())
                 .anyRequest().authenticated().and()
                 .logout(logout -> logout

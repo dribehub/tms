@@ -2,6 +2,7 @@ package com.tms.service.impl;
 
 import com.tms.dto.UserDto;
 import com.tms.entity.User;
+import com.tms.enums.RoleEnum;
 import com.tms.mapper.UserMapper;
 import com.tms.repository.UserRepository;
 import com.tms.service.AuthService;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class AuthServiceImpl implements AuthService {
+public class AuthServiceImpl implements AuthService { // TODO: not being used, might delete the whole service
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -37,8 +38,18 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean isPrincipleAdmin() {
+        return isPrincipleOfRole(RoleEnum.ADMIN);
+    }
+
+    @Override
+    public boolean isPrincipleUser() {
+        return isPrincipleOfRole(RoleEnum.USER);
+    }
+
+    @Override
+    public boolean isPrincipleOfRole(RoleEnum role) {
         return getAuthentication().getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .anyMatch(a -> a.equals("admin"));
+                .anyMatch(a -> a.equals(role.name()));
     }
 }

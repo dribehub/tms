@@ -1,5 +1,5 @@
 package com.tms.enums;
 
-public enum TripStatus {
+public enum TripStatusEnum {
     CREATED, WAITING_FOR_APPROVAL, APPROVED;
 }
