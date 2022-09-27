@@ -1,8 +1,8 @@
-package com.tms.exception.validation;
+package com.tms.exception.validation.user;
 
-import com.tms.exception.CustomRuntimeException;
+import javax.validation.ValidationException;
 
-public class WeakPasswordException extends CustomRuntimeException {
+public class WeakPasswordException extends ValidationException {
 
     private final static String
             WEAK_PASSWORD = "This password is not strong enough",

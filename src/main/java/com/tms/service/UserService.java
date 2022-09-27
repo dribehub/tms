@@ -10,8 +10,6 @@ public interface UserService {
 
     UserDto getById(Integer id);
 
-    void validateNewUser(UserDto user);
-
     UserDto register(UserDto user);
 
     UserDto update(UserDto user);

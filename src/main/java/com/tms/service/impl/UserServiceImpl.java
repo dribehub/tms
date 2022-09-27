@@ -3,7 +3,7 @@ package com.tms.service.impl;
 import com.tms.dto.UserDto;
 import com.tms.entity.User;
 import com.tms.exception.db.EntityNotFoundException;
-import com.tms.exception.validation.*;
+import com.tms.exception.validation.user.*;
 import com.tms.mapper.UserMapper;
 import com.tms.repository.UserRepository;
 import com.tms.service.UserService;
@@ -37,11 +37,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void validateNewUser(UserDto user) {
+    public UserDto register(UserDto user) {
+        validateNewUser(user);
+        user.setPassword(encoder.encode(user.getPassword()));
+        if (user.getRoles() == null || user.getRoles().isEmpty())
+            user.setRoleAsUser();
+        return mapper.toDto(repository.save(mapper.toEntity(user)));
+    }
+
+    private void validateNewUser(UserDto user) {
         if (!PatternUtils.isEmail(user.getEmail()))
-            throw new EmailNotValidException(user.getEmail());
+            throw new InvalidEmailFormatException(user.getEmail());
         if (!PatternUtils.isUsername(user.getUsername()))
-            throw new UsernameNotValidException(user.getUsername());
+            throw new InvalidUsernameException(user.getUsername());
         if (repository.isEmailTaken(user.getEmail()))
             throw new EmailTakenException(user.getEmail());
         if (repository.isUsernameTaken(user.getUsername()))
@@ -58,14 +66,6 @@ public class UserServiceImpl implements UserService {
             throw WeakPasswordException.noDigit();
         if (!PatternUtils.containsSymbols(password))
             throw WeakPasswordException.noSymbol();
-    }
-
-    @Override
-    public UserDto register(UserDto user) {
-        user.setPassword(encoder.encode(user.getPassword()));
-        if (user.getRoles() == null || user.getRoles().isEmpty())
-            user.setRoleAsUser();
-        return mapper.toDto(repository.save(mapper.toEntity(user)));
     }
 
     @Override

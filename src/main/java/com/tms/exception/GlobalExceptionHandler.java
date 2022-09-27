@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ValidationException;
 import java.util.Date;
 
 import static org.springframework.http.HttpStatus.*;
@@ -28,7 +29,7 @@ public class GlobalExceptionHandler {
         return handle(ex, request, INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(InvalidRequestStateException.class)
+    @ExceptionHandler({InvalidRequestStateException.class, ValidationException.class})
     public ResponseEntity<ErrorDetails> handle(InvalidRequestStateException ex, WebRequest request) {
         return handle(ex, request, BAD_REQUEST);
     }

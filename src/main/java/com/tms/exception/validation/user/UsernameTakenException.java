@@ -1,8 +1,8 @@
-package com.tms.exception.validation;
+package com.tms.exception.validation.user;
 
-import com.tms.exception.CustomRuntimeException;
+import javax.validation.ValidationException;
 
-public class UsernameTakenException extends CustomRuntimeException {
+public class UsernameTakenException extends ValidationException {
 
     public UsernameTakenException() {
         super("This username is taken");

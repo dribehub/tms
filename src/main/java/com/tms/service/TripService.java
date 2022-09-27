@@ -12,11 +12,11 @@ public interface TripService {
 
     TripDto create(TripDto trip);
 
+    TripDto update(TripDto trip);
+
     TripDto sendApproval(TripDto trip);
 
     TripDto approve(TripDto trip);
-
-    TripDto update(TripDto trip);
 
     TripDto deleteById(Integer id);
 }

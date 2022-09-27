@@ -1,8 +1,8 @@
-package com.tms.exception.validation;
+package com.tms.exception.validation.user;
 
-import com.tms.exception.CustomRuntimeException;
+import javax.validation.ValidationException;
 
-public class EmailTakenException extends CustomRuntimeException {
+public class EmailTakenException extends ValidationException {
 
     public EmailTakenException() {
         super("This email is already in use");

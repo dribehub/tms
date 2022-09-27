@@ -31,7 +31,6 @@ public class AuthController {
 
     @PostMapping("register")
     public UserDto register(@RequestBody UserDto user) {
-        userService.validateNewUser(user);
         user.setRoleAsUser();
         return userService.register(user);
     }
