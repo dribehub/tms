@@ -5,6 +5,7 @@ import com.tms.exception.request.IdNotFoundException;
 import com.tms.exception.request.NullRequestBodyException;
 import com.tms.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class UserController {
     }
 
     @PostMapping("create")
+    @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@RequestBody UserDto user) {
         service.validateNewUser(user);
         return service.register(user);
