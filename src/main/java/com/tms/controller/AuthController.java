@@ -1,9 +1,8 @@
 package com.tms.controller;
 
 import com.tms.dto.UserDto;
-import com.tms.enums.Role;
+import com.tms.dto.details.UserDetailsImpl;
 import com.tms.security.JwtResponse;
-import com.tms.security.UserDetailsImpl;
 import com.tms.service.AuthService;
 import com.tms.service.UserService;
 import com.tms.util.JwtUtils;
@@ -14,10 +13,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -31,13 +28,11 @@ public class AuthController {
 
     private final AuthenticationManager authManager;
     private final JwtUtils jwtUtils;
-    private final PasswordEncoder encoder;
 
     @PostMapping("register")
     public UserDto register(@RequestBody UserDto user) {
         userService.validateNewUser(user);
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setRoles(Collections.singleton(Role.USER.role));
+        user.setRoleAsUser();
         return userService.register(user);
     }
 
@@ -63,8 +58,8 @@ public class AuthController {
                         .collect(Collectors.toSet())));
     }
 
-    @PostMapping("logout")
-    public UserDto logout() {
-        return null;
-    }
+//    @PostMapping("logout")
+//    public UserDto logout() {
+//        return null;
+//    }
 }

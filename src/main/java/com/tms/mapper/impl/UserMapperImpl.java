@@ -3,7 +3,7 @@ package com.tms.mapper.impl;
 import com.tms.dto.UserDto;
 import com.tms.entity.User;
 import com.tms.mapper.UserMapper;
-import com.tms.security.UserDetailsImpl;
+import com.tms.dto.details.UserDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

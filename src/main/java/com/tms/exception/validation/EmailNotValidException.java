@@ -5,10 +5,10 @@ import com.tms.exception.CustomRuntimeException;
 public class EmailNotValidException extends CustomRuntimeException {
 
     public EmailNotValidException() {
-        super("This email is not a valid email format.");
+        super("This email is not a valid email format");
     }
 
     public EmailNotValidException(String email) {
-        super(String.format("'%s' is not a valid email format.", email));
+        super(String.format("'%s' is not a valid email format", email));
     }
 }

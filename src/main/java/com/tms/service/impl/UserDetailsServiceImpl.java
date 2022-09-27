@@ -2,7 +2,7 @@ package com.tms.service.impl;
 
 import com.tms.entity.User;
 import com.tms.repository.UserRepository;
-import com.tms.security.UserDetailsImpl;
+import com.tms.dto.details.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

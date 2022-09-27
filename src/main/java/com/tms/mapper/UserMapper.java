@@ -2,7 +2,7 @@ package com.tms.mapper;
 
 import com.tms.dto.UserDto;
 import com.tms.entity.User;
-import com.tms.security.UserDetailsImpl;
+import com.tms.dto.details.UserDetailsImpl;
 
 public interface UserMapper {
 

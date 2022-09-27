@@ -2,7 +2,10 @@ package com.tms.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tms.entity.UserRole;
+import com.tms.enums.Role;
 import lombok.*;
+
+import java.util.Collections;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -27,5 +30,13 @@ public class UserDto {
 
     public void setEmail(String email) {
         this.email = email.toLowerCase();
+    }
+
+    public void setRoleAsUser() {
+        setRoles(Collections.singleton(Role.USER.role));
+    }
+
+    public void setRoleAsAdmin() {
+        setRoles(Collections.singleton(Role.ADMIN.role));
     }
 }

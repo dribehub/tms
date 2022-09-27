@@ -1,4 +1,4 @@
-package com.tms.exception;
+package com.tms.dto.details;
 
 import java.util.Date;
 

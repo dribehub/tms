@@ -1,6 +1,6 @@
 package com.tms.util;
 
-import com.tms.security.UserDetailsImpl;
+import com.tms.dto.details.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

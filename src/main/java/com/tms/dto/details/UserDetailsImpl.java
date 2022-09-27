@@ -1,4 +1,4 @@
-package com.tms.security;
+package com.tms.dto.details;
 
 import com.tms.entity.User;
 

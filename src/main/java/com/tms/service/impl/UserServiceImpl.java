@@ -2,14 +2,14 @@ package com.tms.service.impl;
 
 import com.tms.dto.UserDto;
 import com.tms.entity.User;
+import com.tms.exception.database.EntityNotFoundException;
 import com.tms.exception.validation.*;
 import com.tms.mapper.UserMapper;
 import com.tms.repository.UserRepository;
-import com.tms.security.UserDetailsImpl;
 import com.tms.service.UserService;
 import com.tms.util.PatternUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
     private final UserMapper mapper;
+    private final PasswordEncoder encoder;
 
     @Override
     public List<UserDto> getAll() {
@@ -30,8 +31,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto register(UserDto user) {
-        return mapper.toDto(repository.save(mapper.toEntity(user)));
+    public UserDto getById(Integer id) {
+        return mapper.toDto(repository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(User.class, id)));
     }
 
     @Override
@@ -56,5 +58,28 @@ public class UserServiceImpl implements UserService {
             throw WeakPasswordException.noDigit();
         if (!PatternUtils.containsSymbols(password))
             throw WeakPasswordException.noSymbol();
+    }
+
+    @Override
+    public UserDto register(UserDto user) {
+        user.setPassword(encoder.encode(user.getPassword()));
+        if (user.getRoles() == null || user.getRoles().isEmpty())
+            user.setRoleAsUser();
+        return mapper.toDto(repository.save(mapper.toEntity(user)));
+    }
+
+    @Override
+    public UserDto update(UserDto user) {
+        repository.findById(user.getId()).orElseThrow(
+                () -> new EntityNotFoundException(User.class, user.getId()));
+        if (user.getPassword() != null)
+            user.setPassword(encoder.encode(user.getPassword()));
+        return mapper.toDto(repository.save(mapper.toEntity(user)));
+    }
+
+    @Override
+    public UserDto deleteById(Integer id) {
+        return mapper.toDto(repository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(User.class, id)));
     }
 }

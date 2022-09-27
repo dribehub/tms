@@ -4,8 +4,15 @@ import com.tms.exception.CustomRuntimeException;
 
 public class WeakPasswordException extends CustomRuntimeException {
 
+    private final static String
+            WEAK_PASSWORD = "This password is not strong enough",
+            TOO_SHORT = "Password must be at least 8 characters long",
+            NO_UPPERCASE = "Password must contain at least 1 uppercase character",
+            NO_DIGIT = "Password must contain at least 1 digit",
+            NO_SYMBOL = "Password must contain at least 1 symbol";
+
     public WeakPasswordException() {
-        super("This password is not strong enough.");
+        super(WEAK_PASSWORD);
     }
 
     public WeakPasswordException(String message) {
@@ -13,22 +20,18 @@ public class WeakPasswordException extends CustomRuntimeException {
     }
 
     public static WeakPasswordException tooShort() {
-        String message = "Password must be at least 8 characters long.";
-        return new WeakPasswordException(message);
+        return new WeakPasswordException(TOO_SHORT);
     }
 
     public static WeakPasswordException noUppercase() {
-        String message = "Password must contain at least 1 uppercase character.";
-        return new WeakPasswordException(message);
+        return new WeakPasswordException(NO_UPPERCASE);
     }
 
     public static WeakPasswordException noDigit() {
-        String message = "Password must contain at least 1 digit.";
-        return new WeakPasswordException(message);
+        return new WeakPasswordException(NO_DIGIT);
     }
 
     public static WeakPasswordException noSymbol() {
-        String message = "Password must contain at least 1 symbol.";
-        return new WeakPasswordException(message);
+        return new WeakPasswordException(NO_SYMBOL);
     }
 }

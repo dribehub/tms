@@ -38,7 +38,7 @@ public class SecurityConfig {
     }
 
     /**
-     * HTTP configuration
+     * HTTP configuration & routes
      * @throws Exception if CORS is not successful
      */
     @Bean
@@ -53,6 +53,7 @@ public class SecurityConfig {
                         HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage())
                 ).and()
                 .authorizeRequests() // Set permissions on endpoints
+                .antMatchers("/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/api/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/users/**").hasRole(Role.ADMIN.name())
