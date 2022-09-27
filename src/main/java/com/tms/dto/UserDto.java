@@ -1,10 +1,12 @@
 package com.tms.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tms.entity.UserRole;
 import com.tms.enums.RoleEnum;
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Set;
 
@@ -22,7 +24,14 @@ public class UserDto {
 
     private String password;
 
+    @JsonIgnore
     private Set<UserRole> roles;
+
+    @JsonIgnore
+    private Timestamp createdAt;
+
+    @JsonIgnore
+    private boolean isActive;
 
     public void setUsername(String username) {
         this.username = username.toLowerCase();

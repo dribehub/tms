@@ -7,6 +7,7 @@ import com.tms.service.AuthService;
 import com.tms.service.UserService;
 import com.tms.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,15 +24,17 @@ import java.util.stream.Collectors;
 @RestController
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthService authService; /* TODO: remove later */
     private final UserService userService;
 
     private final AuthenticationManager authManager;
     private final JwtUtils jwtUtils;
 
     @PostMapping("register")
+    @ResponseStatus(HttpStatus.CREATED)
     public UserDto register(@RequestBody UserDto user) {
         user.setRoleAsUser();
+        user.setActive(false);
         return userService.register(user);
     }
 
@@ -48,7 +51,7 @@ public class AuthController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
+        return ResponseEntity.accepted().body(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),

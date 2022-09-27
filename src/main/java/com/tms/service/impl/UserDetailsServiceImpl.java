@@ -1,9 +1,10 @@
 package com.tms.service.impl;
 
-import com.tms.entity.User;
+import com.tms.exception.db.EntityNotFoundException;
 import com.tms.repository.UserRepository;
 import com.tms.dto.details.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,12 +19,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException {
-        String error = String.format("Couldn't load user with username '%s'", username);
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException(error));
-        return UserDetailsImpl.build(user);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return UserDetailsImpl.build(userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(User.class, username))
+        );
     }
-
 }

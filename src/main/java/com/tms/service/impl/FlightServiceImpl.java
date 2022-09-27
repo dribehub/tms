@@ -2,8 +2,6 @@ package com.tms.service.impl;
 
 import com.tms.dto.FlightDto;
 import com.tms.entity.Flight;
-import com.tms.entity.TripStatus;
-import com.tms.enums.TripStatusEnum;
 import com.tms.exception.db.EntityNotFoundException;
 import com.tms.mapper.FlightMapper;
 import com.tms.repository.FlightRepository;
@@ -13,7 +11,6 @@ import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -24,9 +21,7 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public List<FlightDto> getAll() {
-        return repository.findAll()
-                .stream().map(mapper::toDto)
-                .collect(Collectors.toList());
+        return mapper.toDtos(repository.findAll());
     }
 
     @Override

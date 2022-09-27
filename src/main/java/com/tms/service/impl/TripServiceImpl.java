@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -25,20 +24,18 @@ public class TripServiceImpl implements TripService {
     private final TripStatusRepository statusRepository;
     private final TripMapper mapper;
 
-    @Override // admin
+    @Override
     public List<TripDto> getAll() {
-        return repository.findAll()
-                .stream().map(mapper::toDto)
-                .collect(Collectors.toList());
+        return mapper.toDtos(repository.findAll());
     }
 
-    @Override // admin
+    @Override
     public TripDto getById(Integer id) {
          return mapper.toDto(repository.findById(id).orElseThrow(
                  () -> new EntityNotFoundException(Trip.class, id)));
     }
 
-    @Override // user
+    @Override
     public TripDto create(TripDto trip) {
         validate(trip);
         trip.setStatus(getStatus(TripStatusEnum.CREATED));
@@ -52,25 +49,25 @@ public class TripServiceImpl implements TripService {
             throw new InvalidIntervalException();
     }
 
-    @Override // admin, user
+    @Override
     public TripDto update(TripDto trip) {
         trip.setStatus(getStatus(TripStatusEnum.WAITING_FOR_APPROVAL));
         return mapper.toDto(repository.save(mapper.toEntity(trip)));
     }
 
-    @Override // user
+    @Override
     public TripDto sendApproval(TripDto trip) {
         trip.setStatus(getStatus(TripStatusEnum.WAITING_FOR_APPROVAL));
         return mapper.toDto(repository.save(mapper.toEntity(trip)));
     }
 
-    @Override // admin
+    @Override
     public TripDto approve(TripDto trip) {
         trip.setStatus(getStatus(TripStatusEnum.APPROVED));
         return mapper.toDto(repository.save(mapper.toEntity(trip)));
     }
 
-    @Override // admin
+    @Override
     public TripDto deleteById(Integer id) {
         Trip deleted = repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Trip.class, id));
@@ -79,8 +76,6 @@ public class TripServiceImpl implements TripService {
     }
 
     private TripStatus getStatus(TripStatusEnum status) {
-        return statusRepository
-                .findByName(status.name())
-                .orElse(null);
+        return statusRepository.findByName(status.name()).orElse(null);
     }
 }

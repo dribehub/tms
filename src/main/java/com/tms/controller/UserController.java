@@ -23,6 +23,16 @@ public class UserController {
         return service.getAll();
     }
 
+    @GetMapping("getActive")
+    public List<UserDto> getActive() {
+        return service.getActive();
+    }
+
+    @GetMapping("getNotActive")
+    public List<UserDto> getNotActive() {
+        return service.getNotActive();
+    }
+
     @GetMapping("getById")
     public UserDto getById(@RequestParam Integer id) {
         return service.getById(id);
@@ -31,6 +41,7 @@ public class UserController {
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@RequestBody UserDto user) {
+        user.setActive(true);
         return service.register(user);
     }
 
@@ -42,10 +53,15 @@ public class UserController {
         return service.update(user);
     }
 
+    @PutMapping("activate")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public UserDto activateById(@RequestParam Integer id) {
+        return service.activateById(id);
+    }
+
     @DeleteMapping("deleteById")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public UserDto deleteById(@RequestParam Integer id) {
-        if (id == null) throw new IdNotFoundException();
         return service.deleteById(id);
     }
 }

@@ -8,6 +8,9 @@ import com.tms.dto.details.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Component
 public class UserMapperImpl implements UserMapper {
@@ -19,24 +22,38 @@ public class UserMapperImpl implements UserMapper {
                 dto.getUsername(),
                 dto.getEmail(),
                 dto.getPassword(),
-                dto.getRoles()
+                dto.getRoles(),
+                dto.getCreatedAt(),
+                dto.isActive()
         );
     }
 
     @Override
-    public UserDetailsImpl toDetails(User entity) {
-        return entity == null ? null : new UserDetailsImpl(
-                entity.getId(),
-                entity.getUsername(),
-                entity.getEmail(),
-                entity.getPassword(),
-                entity.getRoles()
-        );
+    public List<User> toEntities(List<UserDto> dtos) {
+        return dtos.stream().map(this::toEntity).collect(Collectors.toList());
     }
 
     @Override
     public UserDto toDto(User entity) {
         return entity == null ? null : new UserDto(
+                entity.getId(),
+                entity.getUsername(),
+                entity.getEmail(),
+                entity.getPassword(),
+                entity.getRoles(),
+                entity.getCreatedAt(),
+                entity.isActive()
+        );
+    }
+
+    @Override
+    public List<UserDto> toDtos(List<User> entities) {
+        return entities.stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDetailsImpl toDetails(User entity) {
+        return entity == null ? null : new UserDetailsImpl(
                 entity.getId(),
                 entity.getUsername(),
                 entity.getEmail(),

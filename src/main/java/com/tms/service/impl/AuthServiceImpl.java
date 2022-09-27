@@ -12,9 +12,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+/* TODO: consider deleting this service */
 @RequiredArgsConstructor
 @Service
-public class AuthServiceImpl implements AuthService { // TODO: not being used, might delete the whole service
+public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;

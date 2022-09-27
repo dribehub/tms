@@ -8,6 +8,9 @@ import com.tms.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Component
 public class TripMapperImpl implements TripMapper {
@@ -31,6 +34,11 @@ public class TripMapperImpl implements TripMapper {
     }
 
     @Override
+    public List<Trip> toEntities(List<TripDto> dtos) {
+        return dtos.stream().map(this::toEntity).collect(Collectors.toList());
+    }
+
+    @Override
     public TripDto toDto(Trip entity) {
         return entity == null ? null : new TripDto(
                 entity.getId(),
@@ -44,5 +52,10 @@ public class TripMapperImpl implements TripMapper {
                 entity.getCreatedAt(),
                 entity.getStatus()
         );
+    }
+
+    @Override
+    public List<TripDto> toDtos(List<Trip> entities) {
+        return entities.stream().map(this::toDto).collect(Collectors.toList());
     }
 }

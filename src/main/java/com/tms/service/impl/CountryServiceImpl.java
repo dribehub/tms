@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/* TODO
-    to be deleted afterwards
-    or be kept for admin CRUD */
+/* TODO to be deleted afterwards or be kept for admin CRUD */
 @RequiredArgsConstructor
 @Service
 public class CountryServiceImpl implements CountryService {

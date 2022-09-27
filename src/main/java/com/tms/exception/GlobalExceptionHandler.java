@@ -25,12 +25,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CustomRuntimeException.class)
-    public ResponseEntity<ErrorDetails> handle(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<ErrorDetails> handle(CustomRuntimeException ex, WebRequest request) {
         return handle(ex, request, INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({InvalidRequestStateException.class, ValidationException.class})
+    @ExceptionHandler(InvalidRequestStateException.class)
     public ResponseEntity<ErrorDetails> handle(InvalidRequestStateException ex, WebRequest request) {
+        return handle(ex, request, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorDetails> handle(ValidationException ex, WebRequest request) {
         return handle(ex, request, BAD_REQUEST);
     }
 

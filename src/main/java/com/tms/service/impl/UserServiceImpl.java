@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -25,9 +24,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAll() {
-        return repository.findAll()
-                .stream().map(mapper::toDto)
-                .collect(Collectors.toList());
+        return mapper.toDtos(repository.findAll());
+    }
+
+    @Override
+    public List<UserDto> getActive() {
+        return mapper.toDtos(repository.findActive());
+    }
+
+    @Override
+    public List<UserDto> getNotActive() {
+        return mapper.toDtos(repository.findNotActive());
     }
 
     @Override
@@ -78,10 +85,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto activateById(Integer id) {
+        User user = repository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(User.class, id));
+        user.setActive(true);
+        return mapper.toDto(repository.save(user));
+    }
+
+    @Override
     public UserDto deleteById(Integer id) {
         User deleted = repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(User.class, id));
-        repository.deleteById(id);
-        return mapper.toDto(deleted);
+        deleted.setActive(false);
+        return mapper.toDto(repository.save(deleted));
     }
 }

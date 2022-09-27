@@ -23,7 +23,7 @@ public class TripDto {
     private Date departure;
     private Date arrival;
     private UserDto createdBy;
-    private Timestamp createdAt; // TODO: consider removing this field
+    private Timestamp createdAt; /* TODO: consider removing this field */
     private TripStatus status;
 
     public boolean isOf(TripReasonEnum reason) {

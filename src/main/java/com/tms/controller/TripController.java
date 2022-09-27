@@ -45,7 +45,6 @@ public class TripController {
     @DeleteMapping("deleteById") // admin
     @ResponseStatus(HttpStatus.ACCEPTED)
     public TripDto deleteById(@RequestParam Integer id) {
-        if (id == null) throw new IdNotFoundException();
         return service.deleteById(id);
     }
 }

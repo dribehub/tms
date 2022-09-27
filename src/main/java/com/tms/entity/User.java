@@ -20,9 +20,6 @@ public class User {
 
     private String password;
 
-    @Transient
-    private Timestamp createdAt;
-
     @ManyToMany @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -30,11 +27,8 @@ public class User {
     )
     private Set<UserRole> roles;
 
-    public User(Integer id, String username, String email, String password, Set<UserRole> roles) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.roles = roles;
-    }
+    @Transient
+    private Timestamp createdAt;
+
+    private boolean isActive;
 }
