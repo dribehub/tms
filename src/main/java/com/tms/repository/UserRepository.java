@@ -11,17 +11,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByUsername(String username);
 
-    @Query("SELECT u FROM User u WHERE u.isActive = TRUE")
-    List<User> findActive();
-
-    @Query("SELECT u FROM User u WHERE u.isActive = FALSE")
-    List<User> findNotActive();
-
-    @Query("SELECT u FROM User u WHERE u.isApproved = TRUE")
-    List<User> findApproved();
-
-    @Query("SELECT u FROM User u WHERE u.isApproved = FALSE")
-    List<User> findNotApproved();
+    @Query("SELECT u FROM User u " +
+            "WHERE :isActive IS NULL OR u.isActive = :isActive " +
+            "AND :isApproved IS NULL OR u.isApproved = :isApproved")
+    List<User> findAll(Boolean isActive, Boolean isApproved);
 
     @Query("SELECT COUNT(u) > 0 FROM User u WHERE u.username = :username")
     boolean isUsernameTaken(String username);

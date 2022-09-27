@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 @RequestMapping("auth")
 @RestController
 public class AuthController {
@@ -31,12 +30,12 @@ public class AuthController {
     private final JwtUtils jwtUtils;
 
     @PostMapping("register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserDto register(@RequestBody UserDto user) {
+    public ResponseEntity<UserDto> register(@RequestBody UserDto user) {
         user.setRoleAsUser();
-        user.setActive(true);
-        user.setApproved(false);
-        return userService.register(user);
+        user.setIsActive(true);
+        user.setIsApproved(false);
+        UserDto body = userService.register(user);
+        return ResponseEntity.ok(body);
     }
 
     @PostMapping("login")
@@ -44,23 +43,26 @@ public class AuthController {
 
         String username = user.getUsername().toLowerCase();
         String password = user.getPassword();
-        Authentication authentication = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password));
+        Authentication auth = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password)
+        );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
 
-        return ResponseEntity.accepted().body(new JwtResponse(jwt,
+        JwtResponse body = new JwtResponse(
+                jwtUtils.generateJwtToken(auth),
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
-                userDetails.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toSet())));
+                userDetails.getSimpleAuthorities()
+        );
+
+        return ResponseEntity.accepted().body(body);
     }
 
+    /* TODO: logout session */
 //    @PostMapping("logout")
 //    public UserDto logout() {
 //        return null;

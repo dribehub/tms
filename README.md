@@ -14,5 +14,5 @@ Automatically generated OpenAPI specification to visualize and interact with the
 resources without having any of the implementation logic in place.
 
 ### To be implemented
-* Log Out
-* Log4j
+* Unit testing
+* Endpoint access by user roles

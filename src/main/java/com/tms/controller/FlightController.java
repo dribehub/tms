@@ -2,51 +2,49 @@ package com.tms.controller;
 
 import com.tms.dto.FlightDto;
 import com.tms.exception.request.IdNotFoundException;
-import com.tms.exception.request.NullRequestBodyException;
 import com.tms.service.FlightService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/flights")
 @RestController
 public class FlightController {
 
     private final FlightService service;
 
-    @GetMapping("getAll")
-    public List<FlightDto> getAll() {
-        return service.getAll();
+    @GetMapping("list")
+    public ResponseEntity<List<FlightDto>> getAll() {
+        List<FlightDto> body = service.getAll();
+        return ResponseEntity.ok(body);
     }
 
-    @GetMapping("getById/{id}")
-    public FlightDto getById(@PathVariable Integer id) {
-        return service.getById(id);
+    @GetMapping("{id}")
+    public ResponseEntity<FlightDto> getById(@PathVariable Integer id) {
+        FlightDto body = service.getById(id);
+        return ResponseEntity.ok(body);
     }
 
-    @PostMapping("create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public FlightDto create(@RequestBody FlightDto flight) {
-        return service.create(flight);
+    @PostMapping
+    public ResponseEntity<FlightDto> create(@RequestBody FlightDto flight) {
+        FlightDto body = service.create(flight);
+        return ResponseEntity.ok(body);
     }
 
-    @PutMapping("update")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public FlightDto update(@RequestBody FlightDto flight) {
-        if (flight == null)
-            throw new NullRequestBodyException();
+    @PutMapping
+    public ResponseEntity<FlightDto> update(@RequestBody FlightDto flight) {
         if (flight.getId() == null)
             throw new IdNotFoundException();
-        return service.update(flight);
+        FlightDto body = service.update(flight);
+        return ResponseEntity.ok(body);
     }
 
-    @DeleteMapping("deleteById/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public FlightDto deleteById(@PathVariable Integer id) {
-        return service.deleteById(id);
+    @DeleteMapping("{id}")
+    public ResponseEntity<FlightDto> deleteById(@PathVariable Integer id) {
+        FlightDto body = service.deleteById(id);
+        return ResponseEntity.ok(body);
     }
 }

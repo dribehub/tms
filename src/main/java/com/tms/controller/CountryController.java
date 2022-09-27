@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/countries")
 @RestController
 public class CountryController {

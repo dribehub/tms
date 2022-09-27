@@ -28,28 +28,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAll() {
-        return mapper.toDtos(repository.findAll());
-    }
-
-    @Override
-    public List<UserDto> getActive() {
-        return mapper.toDtos(repository.findActive());
-    }
-
-    @Override
-    public List<UserDto> getNotActive() {
-        return mapper.toDtos(repository.findNotActive());
-    }
-
-    @Override
-    public List<UserDto> getApproved() {
-        return mapper.toDtos(repository.findApproved());
-    }
-
-    @Override
-    public List<UserDto> getNotApproved() {
-        return mapper.toDtos(repository.findNotApproved());
+    public List<UserDto> getAll(Boolean isActive, Boolean isApproved) {
+        return mapper.toDtos(repository.findAll(isActive, isApproved));
     }
 
     @Override
@@ -100,21 +80,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto setApprovedById(Integer id, boolean isApproved) {
         User user = safeFindById(id);
-        user.setApproved(isApproved);
+        user.setIsApproved(isApproved);
         return mapper.toDto(repository.save(user));
     }
 
     @Override
     public UserDto deleteById(Integer id) {
         User deleted = safeFindById(id);
-        deleted.setActive(false);
+        deleted.setIsActive(false);
         return mapper.toDto(repository.save(deleted));
     }
 
     @Override
     public UserDto restoreById(Integer id) {
         User restored = safeFindById(id);
-        restored.setActive(true);
+        restored.setIsActive(true);
         return mapper.toDto(repository.save(restored));
     }
 }

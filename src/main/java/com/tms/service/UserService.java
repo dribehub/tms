@@ -6,15 +6,7 @@ import java.util.List;
 
 public interface UserService {
 
-    List<UserDto> getAll();
-
-    List<UserDto> getActive();
-
-    List<UserDto> getNotActive();
-
-    List<UserDto> getApproved();
-
-    List<UserDto> getNotApproved();
+    List<UserDto> getAll(Boolean isActive, Boolean isApproved);
 
     UserDto getById(Integer id);
 

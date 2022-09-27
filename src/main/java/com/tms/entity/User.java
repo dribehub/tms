@@ -33,7 +33,7 @@ public class User {
     @Transient
     private Timestamp updatedAt;
 
-    private boolean isApproved;
+    private Boolean isApproved;
 
-    private boolean isActive;
+    private Boolean isActive;
 }

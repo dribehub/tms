@@ -33,10 +33,10 @@ public class UserDto {
     @JsonIgnore
     private Timestamp updatedAt;
 
-    private boolean isApproved;
+    private Boolean isApproved;
 
     @JsonIgnore
-    private boolean isActive;
+    private Boolean isActive;
 
     public void setUsername(String username) {
         this.username = username.toLowerCase();

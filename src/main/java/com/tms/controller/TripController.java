@@ -2,63 +2,61 @@ package com.tms.controller;
 
 import com.tms.dto.TripDto;
 import com.tms.exception.request.IdNotFoundException;
-import com.tms.exception.request.NullRequestBodyException;
 import com.tms.service.TripService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/trips")
 @RestController
 public class TripController {
 
     private final TripService service;
 
-    @GetMapping("getAll")
-    public List<TripDto> getAll() {
-        return service.getAll();
+    @GetMapping("list")
+    public ResponseEntity<List<TripDto>> getAll() {
+        List<TripDto> body = service.getAll();
+        return ResponseEntity.ok(body);
     }
 
-    @GetMapping("getById/{id}")
-    public TripDto getById(@PathVariable Integer id) {
-        return service.getById(id);
+    @GetMapping("{id}")
+    public ResponseEntity<TripDto> getById(@PathVariable Integer id) {
+        TripDto body = service.getById(id);
+        return ResponseEntity.ok(body);
     }
 
-    @PostMapping("create") // user
-    @ResponseStatus(HttpStatus.CREATED)
-    public TripDto create(@RequestBody TripDto trip) {
-        return service.create(trip);
+    @PostMapping
+    public ResponseEntity<TripDto> create(@RequestBody TripDto trip) {
+        TripDto body = service.create(trip);
+        return ResponseEntity.ok(body);
     }
 
-    @PutMapping("update") // admin, user
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public TripDto update(@RequestBody TripDto trip) {
-        if (trip == null)
-            throw new NullRequestBodyException();
+    @PutMapping
+    public ResponseEntity<TripDto> update(@RequestBody TripDto trip) {
         if (trip.getId() == null)
             throw new IdNotFoundException();
-        return service.update(trip);
+        TripDto body = service.update(trip);
+        return ResponseEntity.ok(body);
     }
 
-    @PutMapping("sendApprovalById/{id}") // user
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public TripDto sendApprovalById(@PathVariable Integer id) {
-        return service.sendApprovalById(id);
+    @PutMapping("sendApproval/{id}")
+    public ResponseEntity<TripDto> sendApprovalById(@PathVariable Integer id) {
+        TripDto body = service.sendApprovalById(id);
+        return ResponseEntity.ok(body);
     }
 
-    @PutMapping("approveById/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public TripDto approveById(@PathVariable Integer id) {
-        return service.approveById(id);
+    @PutMapping("approve/{id}")
+    public ResponseEntity<TripDto> approveById(@PathVariable Integer id) {
+        TripDto body = service.approveById(id);
+        return ResponseEntity.ok(body);
     }
 
-    @DeleteMapping("deleteById/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public TripDto deleteById(@PathVariable Integer id) {
-        return service.deleteById(id);
+    @DeleteMapping("{id}")
+    public ResponseEntity<TripDto> deleteById(@PathVariable Integer id) {
+        TripDto body = service.deleteById(id);
+        return ResponseEntity.ok(body);
     }
 }

@@ -2,75 +2,65 @@ package com.tms.controller;
 
 import com.tms.dto.UserDto;
 import com.tms.exception.request.IdNotFoundException;
-import com.tms.exception.request.NullRequestBodyException;
 import com.tms.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/users")
 @RestController
 public class UserController {
 
     private final UserService service;
 
-    @GetMapping("getAll")
-    public List<UserDto> getAll() {
-        return service.getActive();
+    @GetMapping("list")
+    public ResponseEntity<List<UserDto>> getAll(
+            @RequestParam(required = false) Boolean isActive,
+            @RequestParam(required = false) Boolean isApproved) {
+        List<UserDto> body = service.getAll(isActive, isApproved);
+        return ResponseEntity.ok(body);
     }
 
-    @GetMapping("getApproved")
-    public List<UserDto> getApproved() {
-        return service.getApproved();
+    @GetMapping("{id}")
+    public ResponseEntity<UserDto> getById(@PathVariable Integer id) {
+        UserDto body = service.getById(id);
+        return ResponseEntity.ok(body);
     }
 
-    @GetMapping("getNotApproved")
-    public List<UserDto> getNotApproved() {
-        return service.getNotApproved();
+    @PostMapping
+    public ResponseEntity<UserDto> create(@RequestBody UserDto user) {
+        user.setIsActive(true);
+        user.setIsApproved(true);
+        UserDto body = service.register(user);
+        return ResponseEntity.ok(body);
     }
 
-    @GetMapping("getById/{id}")
-    public UserDto getById(@PathVariable Integer id) {
-        return service.getById(id);
-    }
-
-    @PostMapping("create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserDto create(@RequestBody UserDto user) {
-        user.setActive(true);
-        user.setApproved(true);
-        return service.register(user);
-    }
-
-    @PutMapping("update")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserDto update(@RequestBody UserDto user) {
-        if (user == null)
-            throw new NullRequestBodyException();
+    @PutMapping
+    public ResponseEntity<UserDto> update(@RequestBody UserDto user) {
         if (user.getId() == null)
             throw new IdNotFoundException();
-        return service.update(user);
+        UserDto body = service.update(user);
+        return ResponseEntity.ok(body);
     }
 
     @PutMapping("approve/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserDto approveById(@PathVariable Integer id) {
-        return service.setApprovedById(id, true);
+    public ResponseEntity<UserDto> approveById(@PathVariable Integer id) {
+        UserDto body = service.setApprovedById(id, true);
+        return ResponseEntity.ok(body);
     }
 
     @PutMapping("reject/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserDto rejectById(@PathVariable Integer id) {
-        return service.setApprovedById(id, false);
+    public ResponseEntity<UserDto> rejectById(@PathVariable Integer id) {
+        UserDto body = service.setApprovedById(id, false);
+        return ResponseEntity.ok(body);
     }
 
-    @DeleteMapping("deleteById/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserDto deleteById(@PathVariable Integer id) {
-        return service.deleteById(id);
+    @DeleteMapping("{id}")
+    public ResponseEntity<UserDto> deleteById(@PathVariable Integer id) {
+        UserDto body = service.deleteById(id);
+        return ResponseEntity.ok(body);
     }
 }
