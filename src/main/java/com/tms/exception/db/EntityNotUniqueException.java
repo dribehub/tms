@@ -1,4 +1,4 @@
-package com.tms.exception.database;
+package com.tms.exception.db;
 
 import com.tms.exception.CustomRuntimeException;
 

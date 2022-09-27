@@ -2,7 +2,7 @@ package com.tms.service.impl;
 
 import com.tms.dto.UserDto;
 import com.tms.entity.User;
-import com.tms.exception.database.EntityNotFoundException;
+import com.tms.exception.db.EntityNotFoundException;
 import com.tms.exception.validation.*;
 import com.tms.mapper.UserMapper;
 import com.tms.repository.UserRepository;
@@ -79,7 +79,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto deleteById(Integer id) {
-        return mapper.toDto(repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(User.class, id)));
+        User deleted = repository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(User.class, id));
+        repository.deleteById(id);
+        return mapper.toDto(deleted);
     }
 }

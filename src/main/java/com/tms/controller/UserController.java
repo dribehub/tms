@@ -36,6 +36,7 @@ public class UserController {
     }
 
     @PutMapping("update")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public UserDto update(@RequestBody UserDto user) {
         if (user == null) throw new NullRequestBodyException();
         if (user.getId() == null) throw new IdNotFoundException();
@@ -43,6 +44,7 @@ public class UserController {
     }
 
     @DeleteMapping("deleteById")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public UserDto deleteById(@RequestParam Integer id) {
         if (id == null) throw new IdNotFoundException();
         return service.deleteById(id);

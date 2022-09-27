@@ -3,6 +3,8 @@ package com.tms.dto;
 import com.tms.entity.Country;
 import com.tms.entity.TripReason;
 import com.tms.entity.TripStatus;
+import com.tms.enums.TripReasonEnum;
+import com.tms.enums.TripStatusEnum;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -21,6 +23,18 @@ public class TripDto {
     private Date departure;
     private Date arrival;
     private UserDto createdBy;
-    private Timestamp createdAt;
+    private Timestamp createdAt; // TODO: consider removing this field
     private TripStatus status;
+
+    public boolean isOf(TripReasonEnum reason) {
+        return reason.name().equals(this.reason.getName());
+    }
+
+    public boolean isOf(TripStatusEnum status) {
+        return status.name().equals(this.status.getName());
+    }
+
+    public boolean isApproved() {
+        return TripStatusEnum.APPROVED.name().equals(this.status.getName());
+    }
 }

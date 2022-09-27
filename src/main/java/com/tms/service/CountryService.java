@@ -10,7 +10,7 @@ public interface CountryService {
 
     Country getById(Integer id);
 
-    Country create(Country flight);
+    Country create(Country country);
 
     Country update(Country country);
 

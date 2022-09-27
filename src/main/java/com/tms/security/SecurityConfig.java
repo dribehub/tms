@@ -20,6 +20,8 @@ import org.springframework.web.filter.CorsFilter;
 
 import javax.servlet.http.HttpServletResponse;
 
+import static com.tms.enums.RoleEnum.*;
+
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
@@ -56,8 +58,10 @@ public class SecurityConfig {
                 .antMatchers("/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/api/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/users/**").hasRole(RoleEnum.ADMIN.name())
-//                .antMatchers(HttpMethod.GET, "/api/users/**").hasAuthority(Role.ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/api/users/**").hasRole(ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/api/trips/**").hasRole(ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/api/trips/create").hasRole(USER.name())
+                .antMatchers(HttpMethod.GET, "/api/trips/update").hasAnyRole(RoleEnum.getAllNames())
                 .anyRequest().authenticated().and()
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
