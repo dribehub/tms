@@ -11,7 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.*;
 
 @NoArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 public class UserDetailsImpl implements UserDetails {
 
     private Integer id;
@@ -23,7 +24,7 @@ public class UserDetailsImpl implements UserDetails {
     private Set<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(Integer id, String username, String email,
-            String password, Set<? extends GrantedAuthority> authorities) {
+                           String password, Set<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;

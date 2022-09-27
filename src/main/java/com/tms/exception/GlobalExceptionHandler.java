@@ -18,11 +18,9 @@ import static org.springframework.http.HttpStatus.*;
 public class GlobalExceptionHandler {
 
     private ResponseEntity<ErrorDetails> handle(Exception ex, WebRequest request, HttpStatus status) {
-        Date date = new Date();
-        String message = ex.getMessage();
         String description = request.getDescription(false);
-        ErrorDetails errorDetails = new ErrorDetails(date, message, description);
-        return new ResponseEntity<>(errorDetails, status);
+        ErrorDetails details = new ErrorDetails(new Date(), ex.getMessage(), description);
+        return new ResponseEntity<>(details, status);
     }
 
     @ExceptionHandler(CustomRuntimeException.class)

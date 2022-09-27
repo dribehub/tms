@@ -16,35 +16,33 @@ public class TripMapperImpl implements TripMapper {
 
     @Override
     public Trip toEntity(TripDto dto) {
-        if (dto == null) return null;
-        Trip entity = new Trip();
-        entity.setId(dto.getId());
-        entity.setReason(dto.getReason());
-        entity.setDescription(dto.getDescription());
-        entity.setFrom(dto.getFrom());
-        entity.setTo(dto.getTo());
-        entity.setDeparture(dto.getDeparture());
-        entity.setArrival(dto.getArrival());
-        entity.setCreatedBy(userMapper.toEntity(dto.getCreatedBy()));
-        entity.setCreatedAt(dto.getCreatedAt());
-        entity.setStatus(dto.getStatus());
-        return entity;
+        return dto == null ? null : new Trip(
+                dto.getId(),
+                dto.getReason(),
+                dto.getDescription(),
+                dto.getFrom(),
+                dto.getTo(),
+                dto.getDeparture(),
+                dto.getArrival(),
+                userMapper.toEntity(dto.getCreatedBy()),
+                dto.getCreatedAt(),
+                dto.getStatus()
+        );
     }
 
     @Override
     public TripDto toDto(Trip entity) {
-        if (entity == null) return null;
-        TripDto dto = new TripDto();
-        dto.setId(entity.getId());
-        dto.setReason(entity.getReason());
-        dto.setDescription(entity.getDescription());
-        dto.setFrom(entity.getFrom());
-        dto.setTo(entity.getTo());
-        dto.setDeparture(entity.getDeparture());
-        dto.setArrival(entity.getArrival());
-        dto.setCreatedBy(userMapper.toDto(entity.getCreatedBy()));
-        dto.setCreatedAt(entity.getCreatedAt());
-        dto.setStatus(entity.getStatus());
-        return dto;
+        return entity == null ? null : new TripDto(
+                entity.getId(),
+                entity.getReason(),
+                entity.getDescription(),
+                entity.getFrom(),
+                entity.getTo(),
+                entity.getDeparture(),
+                entity.getArrival(),
+                userMapper.toDto(entity.getCreatedBy()),
+                entity.getCreatedAt(),
+                entity.getStatus()
+        );
     }
 }

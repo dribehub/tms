@@ -16,19 +16,17 @@ public class FlightMapperImpl implements FlightMapper {
 
     @Override
     public Flight toEntity(FlightDto dto) {
-        if (dto == null) return null;
-        Flight entity = new Flight();
-        entity.setId(dto.getId());
-        entity.setTrip(tripMapper.toEntity(dto.getTrip()));
-        return entity;
+        return dto == null ? null : new Flight(
+                dto.getId(),
+                tripMapper.toEntity(dto.getTrip())
+        );
     }
 
     @Override
     public FlightDto toDto(Flight entity) {
-        if (entity == null) return null;
-        FlightDto dto = new FlightDto();
-        dto.setId(entity.getId());
-        dto.setTrip(tripMapper.toDto(entity.getTrip()));
-        return dto;
+        return entity == null ? null : new FlightDto(
+                entity.getId(),
+                tripMapper.toDto(entity.getTrip())
+        );
     }
 }
