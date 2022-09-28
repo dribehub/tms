@@ -13,5 +13,6 @@ This is a minimal web application for managing trips and flights all in one plac
 Automatically generated OpenAPI specification to visualize and interact with the API’s 
 resources without having any of the implementation logic in place.
 
-### Logging using SJF4J
-Log errors and exceptional states to console using SLF4J
+### SLF4J (Simple Logging Facade for Java)
+Error logging on user authentication to notify that the application has entered an 
+exceptional state and cannot proceed to authorize the request.
