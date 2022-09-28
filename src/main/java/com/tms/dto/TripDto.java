@@ -5,6 +5,8 @@ import com.tms.entity.TripReason;
 import com.tms.entity.TripStatus;
 import com.tms.enums.TripReasonEnum;
 import com.tms.enums.TripStatusEnum;
+import com.tms.exception.validation.trip.InvalidIntervalException;
+import com.tms.exception.validation.trip.InvalidItineraryException;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -23,7 +25,7 @@ public class TripDto {
     private Date departure;
     private Date arrival;
     private UserDto createdBy;
-    private Timestamp createdAt; /* TODO: consider removing this field */
+    private Timestamp createdAt;
     private TripStatus status;
 
     public boolean isOf(TripReasonEnum reason) {
@@ -36,5 +38,29 @@ public class TripDto {
 
     public boolean isApproved() {
         return TripStatusEnum.APPROVED.name().equals(this.status.getName());
+    }
+
+    public void setFrom(Country from) {
+        if (to != null && to.equals(from))
+            throw new InvalidItineraryException();
+        this.from = from;
+    }
+
+    public void setTo(Country to) {
+        if (from != null && from.equals(to))
+            throw new InvalidItineraryException();
+        this.to = to;
+    }
+
+    public void setDeparture(Date departure) {
+        if (arrival != null && departure != null && !arrival.after(departure))
+            throw new InvalidIntervalException();
+        this.departure = departure;
+    }
+
+    public void setArrival(Date arrival) {
+        if (departure != null && arrival != null && !arrival.after(departure))
+            throw new InvalidIntervalException();
+        this.arrival = arrival;
     }
 }

@@ -39,26 +39,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto register(UserDto user) {
-        validateNewUser(user);
-        user.setPassword(encoder.encode(user.getPassword()));
-        if (user.getRoles() == null || user.getRoles().isEmpty())
-            user.setRoleAsUser();
-        return mapper.toDto(repository.save(mapper.toEntity(user)));
-    }
 
-    private void validateNewUser(UserDto user) {
-        if (!PatternUtils.isEmail(user.getEmail()))
-            throw new InvalidEmailFormatException(user.getEmail());
-        if (!PatternUtils.isUsername(user.getUsername()))
-            throw new InvalidUsernameException(user.getUsername());
         if (repository.isEmailTaken(user.getEmail()))
             throw new EmailTakenException(user.getEmail());
         if (repository.isUsernameTaken(user.getUsername()))
             throw new UsernameTakenException(user.getUsername());
-        validateNewPassword(user.getPassword());
+
+        validatePasswordConstraints(user.getPassword());
+
+        user.setPassword(encoder.encode(user.getPassword()));
+
+        if (user.getRoles() == null || user.getRoles().isEmpty())
+            user.setRoleAsUser();
+
+        return mapper.toDto(repository.save(mapper.toEntity(user)));
     }
 
-    private void validateNewPassword(String password) {
+    private void validatePasswordConstraints(String password) {
         if (password.length() < 8)
             throw WeakPasswordException.tooShort();
         if (!PatternUtils.containsUppercase(password))
@@ -70,11 +67,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto update(UserDto user) {
-        safeFindById(user.getId());
-        if (user.getPassword() != null)
-            user.setPassword(encoder.encode(user.getPassword()));
-        return mapper.toDto(repository.save(mapper.toEntity(user)));
+    public UserDto update(UserDto updated) {
+
+        UserDto existing = getById(updated.getId());
+        String username = updated.getUsername();
+        String email = updated.getEmail();
+        String password = updated.getPassword();
+
+        if (username != null && !username.equals(existing.getUsername())) {
+            if (repository.isUsernameTaken(username))
+                throw new UsernameTakenException(username);
+            existing.setUsername(username);
+        }
+
+        if (email != null && !email.equals(existing.getEmail())) {
+            if (repository.isEmailTaken(email))
+                throw new EmailTakenException(email);
+            existing.setEmail(email);
+        }
+
+        if (password != null) {
+            validatePasswordConstraints(password);
+            existing.setPassword(encoder.encode(password));
+        }
+
+        if (updated.getRoles() != null)
+            existing.setRoles(updated.getRoles());
+
+        if (updated.getIsApproved() != null)
+            existing.setIsApproved(updated.getIsApproved());
+
+        if (updated.getIsActive() != null)
+            existing.setIsActive(updated.getIsActive());
+
+        return mapper.toDto(repository.save(mapper.toEntity(existing)));
     }
 
     @Override

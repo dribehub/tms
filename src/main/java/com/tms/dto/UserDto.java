@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tms.entity.UserRole;
 import com.tms.enums.RoleEnum;
+import com.tms.exception.validation.user.InvalidEmailFormatException;
+import com.tms.exception.validation.user.InvalidUsernameException;
+import com.tms.util.PatternUtils;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -13,7 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter @ToString
-@JsonIgnoreProperties(value = {"password"}, allowSetters = true)
+@JsonIgnoreProperties(value = {"password", "roles"}, allowSetters = true)
 public class UserDto {
 
     private Integer id;
@@ -24,7 +27,6 @@ public class UserDto {
 
     private String password;
 
-    @JsonIgnore
     private Set<UserRole> roles;
 
     @JsonIgnore
@@ -39,19 +41,25 @@ public class UserDto {
     private Boolean isActive;
 
     public void setUsername(String username) {
-        this.username = username.toLowerCase();
+        String validated = username.toLowerCase();
+        if (!PatternUtils.isUsername(username))
+            throw new InvalidUsernameException(username);
+        this.username = validated;
     }
 
     public void setEmail(String email) {
-        this.email = email.toLowerCase();
+        String validated = email.toLowerCase();
+        if (!PatternUtils.isEmail(validated))
+            throw new InvalidEmailFormatException(validated);
+        this.email = validated;
     }
 
-    public void addRole(RoleEnum role) {
-        roles.add(role.role);
+    public void addRole(RoleEnum roleEnum) {
+        roles.add(roleEnum.userRole);
     }
 
-    public void setRole(RoleEnum role) {
-        roles = Collections.singleton(role.role);
+    public void setRole(RoleEnum roleEnum) {
+        roles = Collections.singleton(roleEnum.userRole);
     }
 
     public void setRoleAsUser() {

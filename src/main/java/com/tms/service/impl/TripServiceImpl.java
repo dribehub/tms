@@ -36,28 +36,34 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public TripDto getById(Integer id) {
-         return mapper.toDto(safeFindById(id));
+        return mapper.toDto(safeFindById(id));
     }
 
     @Override
     public TripDto create(TripDto trip) {
-        validate(trip);
         trip.setStatus(getStatus(TripStatusEnum.CREATED));
         return mapper.toDto(repository.save(mapper.toEntity(trip)));
     }
 
-    private void validate(TripDto trip) {
-        if (trip.getFrom().equals(trip.getTo()))
-            throw new InvalidItineraryException();
-        if (trip.getDeparture().after(trip.getArrival()))
-            throw new InvalidIntervalException();
-    }
-
     @Override
-    public TripDto update(TripDto trip) {
-        safeFindById(trip.getId());
-        trip.setStatus(getStatus(TripStatusEnum.WAITING_FOR_APPROVAL));
-        return mapper.toDto(repository.save(mapper.toEntity(trip)));
+    public TripDto update(TripDto updated) {
+        Trip existing = safeFindById(updated.getId());
+        if (updated.getReason() != null)
+            existing.setReason(updated.getReason());
+        if (updated.getDescription() != null)
+            existing.setDescription(updated.getDescription());
+        if (updated.getFrom() != null)
+            existing.setFrom(updated.getFrom());
+        if (updated.getTo() != null)
+            existing.setTo(updated.getTo());
+        if (updated.getDeparture() != null)
+            existing.setDeparture(updated.getDeparture());
+        if (updated.getArrival() != null)
+            existing.setArrival(updated.getArrival());
+        existing.setStatus(updated.getStatus() != null
+                ? updated.getStatus() // admin
+                : getStatus(TripStatusEnum.WAITING_FOR_APPROVAL)); // user
+        return mapper.toDto(repository.save(existing));
     }
 
     @Override
