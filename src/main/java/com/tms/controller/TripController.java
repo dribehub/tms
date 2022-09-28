@@ -28,21 +28,25 @@ public class TripController {
         return ResponseEntity.ok(body);
     }
 
+    @GetMapping("userId/{userId}")
+    public ResponseEntity<List<TripDto>> getByUserCreatedId(@PathVariable Integer userId) {
+        List<TripDto> body = service.getByUserCreatedId(userId);
+        return ResponseEntity.ok(body);
+    }
+
     @PostMapping
     public ResponseEntity<TripDto> create(@RequestBody TripDto trip) {
         TripDto body = service.create(trip);
         return ResponseEntity.ok(body);
     }
 
-    @PutMapping
-    public ResponseEntity<TripDto> update(@RequestBody TripDto trip) {
-        if (trip.getId() == null)
-            throw new IdNotFoundException();
-        TripDto body = service.update(trip);
+    @PutMapping("{id}")
+    public ResponseEntity<TripDto> update(@PathVariable Integer id, @RequestBody TripDto trip) {
+        TripDto body = service.update(id, trip);
         return ResponseEntity.ok(body);
     }
 
-    @PutMapping("sendApproval/{id}")
+    @PutMapping("send/{id}")
     public ResponseEntity<TripDto> sendApprovalById(@PathVariable Integer id) {
         TripDto body = service.sendApprovalById(id);
         return ResponseEntity.ok(body);

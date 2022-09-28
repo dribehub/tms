@@ -5,8 +5,6 @@ import com.tms.entity.Trip;
 import com.tms.entity.TripStatus;
 import com.tms.enums.TripStatusEnum;
 import com.tms.exception.db.EntityNotFoundException;
-import com.tms.exception.validation.trip.InvalidIntervalException;
-import com.tms.exception.validation.trip.InvalidItineraryException;
 import com.tms.mapper.TripMapper;
 import com.tms.repository.TripRepository;
 import com.tms.repository.TripStatusRepository;
@@ -40,14 +38,19 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public List<TripDto> getByUserCreatedId(Integer userId) {
+        return mapper.toDtos(repository.findByUserCreatedId(userId));
+    }
+
+    @Override
     public TripDto create(TripDto trip) {
         trip.setStatus(getStatus(TripStatusEnum.CREATED));
         return mapper.toDto(repository.save(mapper.toEntity(trip)));
     }
 
     @Override
-    public TripDto update(TripDto updated) {
-        Trip existing = safeFindById(updated.getId());
+    public TripDto update(Integer id, TripDto updated) {
+        Trip existing = safeFindById(id);
         if (updated.getReason() != null)
             existing.setReason(updated.getReason());
         if (updated.getDescription() != null)

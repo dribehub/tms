@@ -10,9 +10,11 @@ public interface TripService {
 
     TripDto getById(Integer id);
 
+    List<TripDto> getByUserCreatedId(Integer userId);
+
     TripDto create(TripDto trip);
 
-    TripDto update(TripDto trip);
+    TripDto update(Integer id, TripDto trip);
 
     TripDto sendApprovalById(Integer id);
 
