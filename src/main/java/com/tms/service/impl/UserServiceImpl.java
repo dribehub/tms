@@ -67,9 +67,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto update(UserDto updated) {
+    public UserDto update(Integer id, UserDto updated) {
 
-        UserDto existing = getById(updated.getId());
+        UserDto existing = getById(id);
         String username = updated.getUsername();
         String email = updated.getEmail();
         String password = updated.getPassword();

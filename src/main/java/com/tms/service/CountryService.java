@@ -12,7 +12,11 @@ public interface CountryService {
 
     Country create(Country country);
 
+    List<Country> create(List<Country> country);
+
     Country update(Country country);
 
     Country deleteById(Integer id);
+
+    void deleteAll();
 }

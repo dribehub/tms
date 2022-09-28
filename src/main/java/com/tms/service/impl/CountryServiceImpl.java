@@ -9,12 +9,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/* TODO to be deleted afterwards or be kept for admin CRUD */
 @RequiredArgsConstructor
 @Service
 public class CountryServiceImpl implements CountryService {
 
     private final CountryRepository repository;
+
+    private Country safeFindById(Integer id) {
+        return repository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(Country.class, id));
+    }
 
     @Override
     public List<Country> getAll() {
@@ -23,8 +27,7 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public Country getById(Integer id) {
-        return repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(Country.class, id));
+        return safeFindById(id);
     }
 
     @Override
@@ -33,17 +36,25 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
+    public List<Country> create(List<Country> countries) {
+        return repository.saveAll(countries);
+    }
+
+    @Override
     public Country update(Country country) {
-        repository.findById(country.getId()).orElseThrow(
-                () -> new EntityNotFoundException(Country.class, country.getId()));
+        safeFindById(country.getId());
         return repository.save(country);
     }
 
     @Override
     public Country deleteById(Integer id) {
-        Country deleted = repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(Country.class, id));
+        Country deleted = safeFindById(id);
         repository.deleteById(id);
         return deleted;
+    }
+
+    @Override
+    public void deleteAll() {
+        repository.deleteAll();
     }
 }

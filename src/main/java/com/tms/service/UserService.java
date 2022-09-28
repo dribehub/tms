@@ -12,7 +12,7 @@ public interface UserService {
 
     UserDto register(UserDto user);
 
-    UserDto update(UserDto user);
+    UserDto update(Integer id, UserDto user);
 
     UserDto setApprovedById(Integer id, boolean isApproved);
 

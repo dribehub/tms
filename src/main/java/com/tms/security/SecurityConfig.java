@@ -64,6 +64,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/api/trips/sendApprovalById").hasRole(USER.name())
                 .antMatchers(HttpMethod.GET, "/api/trips/create").hasRole(USER.name())
                 .antMatchers(HttpMethod.GET, "/api/flights/**").hasRole(USER.name())
+                .antMatchers(HttpMethod.GET, "/api/countries/**").hasRole(ADMIN.name())
                 .anyRequest().authenticated().and()
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")

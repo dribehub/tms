@@ -38,23 +38,21 @@ public class UserController {
         return ResponseEntity.ok(body);
     }
 
-    @PutMapping
-    public ResponseEntity<UserDto> update(@RequestBody UserDto user) {
-        if (user.getId() == null)
-            throw new IdNotFoundException();
-        UserDto body = service.update(user);
-        return ResponseEntity.ok(body);
-    }
-
-    @PutMapping("approve/{id}")
+    @PostMapping("approve/{id}")
     public ResponseEntity<UserDto> approveById(@PathVariable Integer id) {
         UserDto body = service.setApprovedById(id, true);
         return ResponseEntity.ok(body);
     }
 
-    @PutMapping("reject/{id}")
+    @PostMapping("reject/{id}")
     public ResponseEntity<UserDto> rejectById(@PathVariable Integer id) {
         UserDto body = service.setApprovedById(id, false);
+        return ResponseEntity.ok(body);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<UserDto> update(@PathVariable Integer id, @RequestBody UserDto user) {
+        UserDto body = service.update(id, user);
         return ResponseEntity.ok(body);
     }
 

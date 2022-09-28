@@ -5,7 +5,7 @@ ${AnsiColor.BRIGHT_BLUE}
     \:::\    \         /::::|   |          /::::\    \
      \:::\    \       /:::::|   |         /::::::\    \
       \:::\    \     /::::::|   |        /:::/\:::\    \
-       \:::\    \   /:::/|::|   |       /:::/__\:::\    \           ${AnsiColor.BRIGHT_GREEN}Title${AnsiColor.BRIGHT_BLUE} Trips Management System
+       \:::\    \   /:::/|::|   |       /:::/__\:::\    \           ${AnsiColor.BRIGHT_GREEN}Title${AnsiColor.BRIGHT_BLUE} Trip Management System
        /::::\    \ /:::/ |::|   |       \:::\   \:::\    \          ${AnsiColor.BRIGHT_GREEN}Author${AnsiColor.BRIGHT_BLUE} Bedër Butka
       /::::::\    \:::/  |::|___|________\:::\   \:::\    \         ${AnsiColor.BRIGHT_GREEN}Running${AnsiColor.BRIGHT_BLUE} Spring Boot ${spring-boot.version}
      /:::/\:::\    \:/   |::::::::\    \  \:::\   \:::\    \        ${AnsiColor.BRIGHT_GREEN}Host${AnsiColor.BRIGHT_BLUE} 127.0.0.1 (localhost)
