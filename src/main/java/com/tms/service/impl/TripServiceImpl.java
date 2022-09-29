@@ -45,7 +45,6 @@ public class TripServiceImpl implements TripService {
     @Override
     public TripDto create(TripDto trip) {
         trip.setStatus(getStatus(TripStatusEnum.CREATED));
-//        trip.setCreatedBy();
         return mapper.toDto(repository.save(mapper.toEntity(trip)));
     }
 

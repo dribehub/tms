@@ -110,6 +110,10 @@
             <optional>true</optional>
         </dependency> <!-- lombok -->
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency> <!-- logback-classic -->
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>

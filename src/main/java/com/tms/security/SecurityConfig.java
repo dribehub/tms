@@ -1,77 +1,76 @@
 package com.tms.security;
 
 import com.tms.enums.RoleEnum;
-import com.tms.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import javax.servlet.http.HttpServletResponse;
-
-import static com.tms.enums.RoleEnum.*;
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
-import static org.springframework.security.config.http.SessionCreationPolicy.*;
+import static com.tms.enums.RoleEnum.ADMIN;
+import static com.tms.enums.RoleEnum.USER;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsServiceImpl service;
-
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(service);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
+    private final UserDetailsService service;
+    private final AuthTokenFilter oncePerRequestFilter;
+    private final AuthenticationEntryPoint authEntryPoint;
 
     /**
      * HTTP configuration & routes
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http    // Enable Cross-Origin Resource Sharing
-                .cors().and()
+
+        http
+                // Enable Cross-Origin Resource Sharing
+                .cors(SecurityConfigurerAdapter::and)
 
                 // Disable Cross-Site Request Forgery
-                .csrf().disable()
+                .csrf(AbstractHttpConfigurer::disable)
 
                 // Set session management to stateless
-                .sessionManagement().sessionCreationPolicy(STATELESS).and()
+                .sessionManagement(c -> c.sessionCreationPolicy(STATELESS))
 
                 // Set unauthorized requests exception handler
-                .exceptionHandling().authenticationEntryPoint((req, res, ex) ->
-                        res.sendError(SC_UNAUTHORIZED, ex.getMessage())).and()
+                .exceptionHandling(c -> c.authenticationEntryPoint(authEntryPoint))
 
                 // Set permissions on endpoints
-                .authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers("/api/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/users/**").hasRole(ADMIN.name())
-                .antMatchers(HttpMethod.GET, "/api/trips/**").hasRole(ADMIN.name())
-                .antMatchers(HttpMethod.GET, "/api/trips/update").hasAnyRole(RoleEnum.names())
-                .antMatchers(HttpMethod.GET, "/api/trips/sendApprovalById").hasRole(USER.name())
-                .antMatchers(HttpMethod.GET, "/api/trips/create").hasRole(USER.name())
-                .antMatchers(HttpMethod.GET, "/api/flights/**").hasRole(USER.name())
-                .antMatchers(HttpMethod.GET, "/api/countries/**").hasRole(ADMIN.name())
-                .anyRequest().authenticated().and()
+                .authorizeRequests(c -> c
+//                        .antMatchers("/**").permitAll()
+                        .antMatchers("/auth/*/**").permitAll()
+                        .antMatchers(GET, "/api/countries/*/**").hasAuthority(ADMIN.name())
+                        .antMatchers(GET, "/api/users/*/**").hasAuthority(ADMIN.name())
+                        .antMatchers(GET, "/api/trips/*/**").hasAuthority(ADMIN.name())
+                        .antMatchers(GET, "/api/trips/update").hasAnyAuthority(RoleEnum.names())
+                        .antMatchers(GET, "/api/trips/sendApprovalById").hasAuthority(USER.name())
+                        .antMatchers(GET, "/api/trips/create").hasAuthority(USER.name())
+                        .antMatchers(GET, "/api/flights/*/**").hasAuthority(USER.name())
+                        .anyRequest().authenticated()
+                )
+
+                // Set OncePerRequestFilter
+                .addFilterAfter(oncePerRequestFilter, UsernamePasswordAuthenticationFilter.class)
 
                 // Set logout url
-                .logout(logout -> logout.logoutUrl("/auth/logout").invalidateHttpSession(true));
+                .logout(c -> c.logoutUrl("/auth/logout").invalidateHttpSession(true));
 
         return http.build();
     }
@@ -81,13 +80,17 @@ public class SecurityConfig {
      */
     @Bean
     public CorsFilter corsFilter() {
+
         CorsConfiguration config = new CorsConfiguration();
+
         config.setAllowCredentials(true);
         config.addAllowedOrigin(CorsConfiguration.ALL);
         config.addAllowedHeader(CorsConfiguration.ALL);
         config.addAllowedMethod(CorsConfiguration.ALL);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
+
         return new CorsFilter(source);
     }
 
@@ -98,6 +101,16 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(service);
+        provider.setPasswordEncoder(passwordEncoder());
+
+        return provider;
     }
 
     @Bean

@@ -1,7 +1,9 @@
 package com.tms.controller;
 
 import com.tms.dto.TripDto;
+import com.tms.dto.UserDto;
 import com.tms.exception.request.IdNotFoundException;
+import com.tms.service.AuthService;
 import com.tms.service.TripService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import java.util.List;
 public class TripController {
 
     private final TripService service;
+    private final AuthService authService;
 
     @GetMapping("list")
     public ResponseEntity<List<TripDto>> getAll() {
@@ -36,6 +39,7 @@ public class TripController {
 
     @PostMapping
     public ResponseEntity<TripDto> create(@RequestBody TripDto trip) {
+        trip.setCreatedBy(authService.getPrinciple());
         TripDto body = service.create(trip);
         return ResponseEntity.ok(body);
     }
