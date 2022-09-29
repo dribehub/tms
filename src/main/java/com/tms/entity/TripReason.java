@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Entity @Table(name = "trip_reason")
 public class TripReason {
 
+    @Setter
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

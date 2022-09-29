@@ -32,6 +32,7 @@ public class Trip {
     @ManyToOne @JoinColumn(name = "created_by")
     private User createdBy;
 
+    @Transient
     private Timestamp createdAt;
 
     @ManyToOne @JoinColumn(name = "status_id")

@@ -20,6 +20,6 @@ public class Country {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Country country = (Country) o;
-        return id.equals(country.id) && name.equals(country.name);
+        return name.equals(country.name);
     }
 }

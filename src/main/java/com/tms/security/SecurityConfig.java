@@ -21,6 +21,8 @@ import org.springframework.web.filter.CorsFilter;
 import javax.servlet.http.HttpServletResponse;
 
 import static com.tms.enums.RoleEnum.*;
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+import static org.springframework.security.config.http.SessionCreationPolicy.*;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -28,9 +30,6 @@ public class SecurityConfig {
 
     private final UserDetailsServiceImpl service;
 
-    /**
-     * AuthenticationManager configuration
-     */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -41,20 +40,24 @@ public class SecurityConfig {
 
     /**
      * HTTP configuration & routes
-     * @throws Exception if CORS is not successful
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors().and() // Enable Cross-Origin Resource Sharing
-                .csrf().disable() // Disable Cross-Site Request Forgery
-                .sessionManagement() // Set session management to stateless
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .exceptionHandling() // Set unauthorized requests exception handler
-                .authenticationEntryPoint((req, res, ex) -> res.sendError(
-                        HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage())
-                ).and()
-                .authorizeRequests() // Set permissions on endpoints
+        http    // Enable Cross-Origin Resource Sharing
+                .cors().and()
+
+                // Disable Cross-Site Request Forgery
+                .csrf().disable()
+
+                // Set session management to stateless
+                .sessionManagement().sessionCreationPolicy(STATELESS).and()
+
+                // Set unauthorized requests exception handler
+                .exceptionHandling().authenticationEntryPoint((req, res, ex) ->
+                        res.sendError(SC_UNAUTHORIZED, ex.getMessage())).and()
+
+                // Set permissions on endpoints
+                .authorizeRequests()
                 .antMatchers("/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/api/**").permitAll()
@@ -66,10 +69,9 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/api/flights/**").hasRole(USER.name())
                 .antMatchers(HttpMethod.GET, "/api/countries/**").hasRole(ADMIN.name())
                 .anyRequest().authenticated().and()
-                .logout(logout -> logout
-                        .logoutUrl("/auth/logout")
-                        .invalidateHttpSession(true)
-                );
+
+                // Set logout url
+                .logout(logout -> logout.logoutUrl("/auth/logout").invalidateHttpSession(true));
 
         return http.build();
     }

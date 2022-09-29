@@ -6,6 +6,6 @@ import javax.validation.ValidationException;
 public class InvalidIntervalException extends ValidationException {
 
     public InvalidIntervalException() {
-        super("Arrival cannot be earlier than departure");
+        super("Departure must be earlier than arrival");
     }
 }

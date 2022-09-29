@@ -1,5 +1,6 @@
 package com.tms.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tms.entity.Country;
 import com.tms.entity.TripReason;
 import com.tms.entity.TripStatus;
@@ -38,6 +39,10 @@ public class TripDto {
 
     public boolean isApproved() {
         return TripStatusEnum.APPROVED.name().equals(this.status.getName());
+    }
+
+    public void setReason(TripReason reason) {
+        this.reason = reason;
     }
 
     public void setFrom(Country from) {

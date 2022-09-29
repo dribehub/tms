@@ -5,6 +5,6 @@ import javax.validation.ValidationException;
 public class InvalidItineraryException extends ValidationException {
 
     public InvalidItineraryException() {
-        super("Field `from` and `to` cannot be equal");
+        super("There is no itinerary from a country to itself");
     }
 }
