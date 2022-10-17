@@ -23,6 +23,7 @@ import org.springframework.web.filter.CorsFilter;
 import static com.tms.enums.RoleEnum.ADMIN;
 import static com.tms.enums.RoleEnum.USER;
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @RequiredArgsConstructor
@@ -56,11 +57,12 @@ public class SecurityConfig {
                 .authorizeRequests(c -> c
 //                        .antMatchers("/**").permitAll()
                         .antMatchers("/auth/*/**").permitAll()
+                        .antMatchers("/swagger-ui/**").permitAll()
                         .antMatchers(GET, "/api/countries/*/**").hasAuthority(ADMIN.name())
                         .antMatchers(GET, "/api/users/*/**").hasAuthority(ADMIN.name())
                         .antMatchers(GET, "/api/trips/*/**").hasAuthority(ADMIN.name())
-                        .antMatchers(GET, "/api/trips/update").hasAnyAuthority(RoleEnum.names())
-                        .antMatchers(GET, "/api/trips/sendApprovalById").hasAuthority(USER.name())
+                        .antMatchers(PUT, "/api/trips/update").hasAnyAuthority(RoleEnum.names())
+                        .antMatchers(PUT, "/api/trips/send/**").hasAuthority(USER.name())
                         .antMatchers(GET, "/api/trips/create").hasAuthority(USER.name())
                         .antMatchers(GET, "/api/flights/*/**").hasAuthority(USER.name())
                         .anyRequest().authenticated()

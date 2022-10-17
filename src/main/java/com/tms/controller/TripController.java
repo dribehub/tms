@@ -52,6 +52,9 @@ public class TripController {
 
     @PutMapping("send/{id}")
     public ResponseEntity<TripDto> sendApprovalById(@PathVariable Integer id) {
+        TripDto existing = service.getById(id);
+        if (!existing.getCreatedBy().getId().equals(authService.getPrinciple().getId()))
+            throw new RuntimeException();
         TripDto body = service.sendApprovalById(id);
         return ResponseEntity.ok(body);
     }

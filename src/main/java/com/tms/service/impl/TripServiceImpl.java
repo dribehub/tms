@@ -1,5 +1,6 @@
 package com.tms.service.impl;
 
+import com.sun.jdi.request.InvalidRequestStateException;
 import com.tms.dto.TripDto;
 import com.tms.entity.Trip;
 import com.tms.entity.TripStatus;
@@ -72,6 +73,11 @@ public class TripServiceImpl implements TripService {
     @Override
     public TripDto sendApprovalById(Integer id) {
         Trip sentApproval = safeFindById(id);
+        // check for status first
+        // check for created by
+        if (!sentApproval.getStatus().equals(getStatus(TripStatusEnum.CREATED))) {
+            throw new InvalidRequestStateException();
+        }
         sentApproval.setStatus(getStatus(TripStatusEnum.WAITING_FOR_APPROVAL));
         // TODO: notify admins
         return mapper.toDto(repository.save(sentApproval));
